@@ -34,16 +34,16 @@ interface SplitConfig {
 
 // Mock data
 const mockItems: OrderItem[] = [
-  { id: '1', name: 'Wagyu Ribeye Steak', quantity: 1, price: 89.00, notes: 'Medium rare' },
-  { id: '2', name: 'Truffle Risotto', quantity: 1, price: 34.00 },
-  { id: '3', name: 'Caesar Salad', quantity: 2, price: 16.00 },
+  { id: '1', name: 'Wagyu Ribeye Steak', quantity: 1, price: 89.00, notes: 'Término medio' },
+  { id: '2', name: 'Risotto de Trufa', quantity: 1, price: 34.00 },
+  { id: '3', name: 'Ensalada César', quantity: 2, price: 16.00 },
   { id: '4', name: 'Château Margaux 2015', quantity: 1, price: 285.00 },
   { id: '5', name: 'Crème Brûlée', quantity: 2, price: 14.00 },
 ]
 
 const TABLE_NUMBER = 12
 const RESTAURANT_NAME = 'La Brasserie'
-const TAX_RATE = 0.0875
+const TAX_RATE = 0.16 // IVA México
 
 const STEPS: CheckoutStep[] = ['review', 'tip', 'split', 'payment', 'confirmation']
 
@@ -107,16 +107,16 @@ export default function CheckoutPage() {
     if (!paymentMethod) return
 
     setIsProcessing(true)
-    // Simulate payment processing
+    // Simular procesamiento de pago
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsProcessing(false)
     setCurrentStep('confirmation')
   }, [paymentMethod])
 
   const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('en-US', {
+    new Intl.NumberFormat('es-MX', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'MXN',
     }).format(amount)
 
   return (
@@ -129,7 +129,7 @@ export default function CheckoutPage() {
               <button
                 onClick={goBack}
                 className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
-                aria-label="Go back"
+                aria-label="Volver"
               >
                 <ChevronLeft className="w-5 h-5 text-gray-700" />
               </button>
@@ -153,7 +153,7 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {/* Step Progress */}
+        {/* Progreso de pasos */}
         {currentStep !== 'confirmation' && (
           <div className="max-w-lg mx-auto px-6 pb-3">
             <div className="flex items-center gap-1">
@@ -172,21 +172,21 @@ export default function CheckoutPage() {
         )}
       </header>
 
-      {/* Main Content */}
+      {/* Contenido Principal */}
       <main className="max-w-lg mx-auto px-4 py-6">
-        {/* Review Step */}
+        {/* Paso: Revisar */}
         {currentStep === 'review' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-                Review Your Order
+                Revisa tu Pedido
               </h1>
               <p className="text-gray-500 mt-1">
-                You&apos;re paying for Table {TABLE_NUMBER}
+                Estás pagando la Mesa {TABLE_NUMBER}
               </p>
             </div>
 
-            {/* Items List */}
+            {/* Lista de Items */}
             <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
               <div className="max-h-[320px] overflow-y-auto">
                 {mockItems.map((item, index) => (
@@ -219,14 +219,14 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Totals */}
+            {/* Totales */}
             <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
                 <span className="tabular-nums">{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gray-600">
-                <span>Tax ({(TAX_RATE * 100).toFixed(2)}%)</span>
+                <span>IVA ({(TAX_RATE * 100).toFixed(0)}%)</span>
                 <span className="tabular-nums">{formatCurrency(tax)}</span>
               </div>
               <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-lg text-gray-900">
@@ -235,39 +235,39 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Continue Button */}
+            {/* Botón Continuar */}
             <button
               onClick={goNext}
               className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
             >
-              Continue to Tip
+              Continuar a Propina
             </button>
           </div>
         )}
 
-        {/* Tip Step */}
+        {/* Paso: Propina */}
         {currentStep === 'tip' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-                Add a Tip
+                Agregar Propina
               </h1>
               <p className="text-gray-500 mt-1">
-                Show appreciation for great service
+                Muestra tu agradecimiento por el servicio
               </p>
             </div>
 
-            {/* Tip Display */}
+            {/* Monto de Propina */}
             <div className="text-center py-8">
               <div className="text-5xl font-bold tracking-tight text-gray-900">
                 {formatCurrency(tipAmount)}
               </div>
               <p className="text-gray-500 mt-2">
-                {tipPercentage}% of {formatCurrency(subtotal)}
+                {tipPercentage}% de {formatCurrency(subtotal)}
               </p>
             </div>
 
-            {/* Tip Presets */}
+            {/* Presets de Propina */}
             <div className="grid grid-cols-4 gap-3">
               {([10, 12, 15, 'custom'] as TipPreset[]).map((preset) => (
                 <button
@@ -279,12 +279,12 @@ export default function CheckoutPage() {
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  {preset === 'custom' ? 'Custom' : `${preset}%`}
+                  {preset === 'custom' ? 'Otro' : `${preset}%`}
                 </button>
               ))}
             </div>
 
-            {/* Custom Tip Slider */}
+            {/* Slider de Propina Personalizada */}
             {tipPreset === 'custom' && (
               <div className="animate-slide-up space-y-4 pt-4">
                 <input
@@ -306,47 +306,47 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            {/* Updated Total */}
+            {/* Total Actualizado */}
             <div className="bg-gray-50 rounded-2xl p-4">
               <div className="flex justify-between text-gray-600 mb-2">
-                <span>Order Total</span>
+                <span>Total del Pedido</span>
                 <span className="tabular-nums">{formatCurrency(subtotal + tax)}</span>
               </div>
               <div className="flex justify-between text-gray-600 mb-3">
-                <span>Tip</span>
+                <span>Propina</span>
                 <span className="tabular-nums text-green-600">
                   +{formatCurrency(tipAmount)}
                 </span>
               </div>
               <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-lg text-gray-900">
-                <span>New Total</span>
+                <span>Nuevo Total</span>
                 <span className="tabular-nums">{formatCurrency(total)}</span>
               </div>
             </div>
 
-            {/* Continue Button */}
+            {/* Botón Continuar */}
             <button
               onClick={goNext}
               className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
             >
-              Continue
+              Continuar
             </button>
           </div>
         )}
 
-        {/* Split Step */}
+        {/* Paso: Dividir Cuenta */}
         {currentStep === 'split' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-                Split the Bill?
+                ¿Dividir la Cuenta?
               </h1>
               <p className="text-gray-500 mt-1">
-                Divide the payment with your group
+                Divide el pago con tu grupo
               </p>
             </div>
 
-            {/* Split Toggle */}
+            {/* Toggle Dividir */}
             <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -354,8 +354,8 @@ export default function CheckoutPage() {
                     <Users className="w-5 h-5 text-gray-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">Split Bill</p>
-                    <p className="text-sm text-gray-500">Divide evenly or custom</p>
+                    <p className="font-medium text-gray-900">Dividir Cuenta</p>
+                    <p className="text-sm text-gray-500">Partes iguales o personalizado</p>
                   </div>
                 </div>
                 <button
@@ -373,15 +373,15 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Split Options */}
+            {/* Opciones de División */}
             {splitConfig.enabled && (
               <div className="animate-slide-up space-y-4">
-                {/* Split Method */}
+                {/* Método de División */}
                 <div className="grid grid-cols-3 gap-2">
                   {[
-                    { value: 'equal', label: 'Equal Split', icon: Users },
-                    { value: 'by-items', label: 'By Items', icon: Receipt },
-                    { value: 'custom-amount', label: 'Custom', icon: CreditCard },
+                    { value: 'equal', label: 'Partes Iguales', icon: Users },
+                    { value: 'by-items', label: 'Por Platillos', icon: Receipt },
+                    { value: 'custom-amount', label: 'Personalizado', icon: CreditCard },
                   ].map(({ value, label, icon: Icon }) => (
                     <button
                       key={value}
@@ -398,10 +398,10 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
-                {/* Number of People */}
+                {/* Número de Personas */}
                 {splitConfig.method === 'equal' && (
                   <div className="bg-gray-50 rounded-2xl p-4">
-                    <p className="text-sm text-gray-500 mb-3">Number of people</p>
+                    <p className="text-sm text-gray-500 mb-3">Número de personas</p>
                     <div className="flex items-center justify-center gap-6">
                       <button
                         onClick={() => setSplitConfig(prev => ({
@@ -428,60 +428,60 @@ export default function CheckoutPage() {
                   </div>
                 )}
 
-                {/* Your Share */}
+                {/* Tu Parte */}
                 <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white text-center shadow-xl shadow-gray-900/20">
-                  <p className="text-sm opacity-80 mb-1">Your share</p>
+                  <p className="text-sm opacity-80 mb-1">Tu parte</p>
                   <p className="text-4xl font-bold">{formatCurrency(yourShare)}</p>
                   <p className="text-sm opacity-80 mt-2">
-                    of {formatCurrency(total)} total
+                    de {formatCurrency(total)} en total
                   </p>
                 </div>
               </div>
             )}
 
-            {/* Total or Skip Split */}
+            {/* Total sin División */}
             {!splitConfig.enabled && (
               <div className="bg-gray-50 rounded-2xl p-4">
                 <div className="flex justify-between font-semibold text-lg text-gray-900">
-                  <span>Total to Pay</span>
+                  <span>Total a Pagar</span>
                   <span className="tabular-nums">{formatCurrency(total)}</span>
                 </div>
               </div>
             )}
 
-            {/* Continue Button */}
+            {/* Botón Continuar */}
             <button
               onClick={goNext}
               className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
             >
-              Continue to Payment
+              Continuar a Pago
             </button>
           </div>
         )}
 
-        {/* Payment Step */}
+        {/* Paso: Método de Pago */}
         {currentStep === 'payment' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-                Payment Method
+                Método de Pago
               </h1>
               <p className="text-gray-500 mt-1">
-                Choose how you&apos;d like to pay
+                Elige cómo deseas pagar
               </p>
             </div>
 
-            {/* Amount to Pay */}
+            {/* Monto a Pagar */}
             <div className="text-center py-6">
               <p className="text-sm text-gray-500 mb-1">
-                {splitConfig.enabled ? 'Your share' : 'Total'}
+                {splitConfig.enabled ? 'Tu parte' : 'Total'}
               </p>
               <p className="text-5xl font-bold tracking-tight text-gray-900">
                 {formatCurrency(yourShare)}
               </p>
             </div>
 
-            {/* Payment Methods */}
+            {/* Métodos de Pago */}
             <div className="space-y-3">
               {/* Apple Pay */}
               <button
@@ -499,7 +499,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1 text-left">
                   <p className="font-semibold text-gray-900">Apple Pay</p>
-                  <p className="text-sm text-gray-500">Fast & secure</p>
+                  <p className="text-sm text-gray-500">Rápido y seguro</p>
                 </div>
                 {paymentMethod === 'apple-pay' && (
                   <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
@@ -527,7 +527,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1 text-left">
                   <p className="font-semibold text-gray-900">Google Pay</p>
-                  <p className="text-sm text-gray-500">Pay with Google</p>
+                  <p className="text-sm text-gray-500">Paga con Google</p>
                 </div>
                 {paymentMethod === 'google-pay' && (
                   <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
@@ -536,7 +536,7 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-              {/* Credit Card */}
+              {/* Tarjeta */}
               <button
                 onClick={() => setPaymentMethod('card')}
                 className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
@@ -549,7 +549,7 @@ export default function CheckoutPage() {
                   <CreditCard className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-semibold text-gray-900">Credit Card</p>
+                  <p className="font-semibold text-gray-900">Tarjeta</p>
                   <p className="text-sm text-gray-500">Visa, Mastercard, Amex</p>
                 </div>
                 {paymentMethod === 'card' && (
@@ -559,7 +559,7 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-              {/* Cash */}
+              {/* Efectivo */}
               <button
                 onClick={() => setPaymentMethod('cash')}
                 className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
@@ -572,8 +572,8 @@ export default function CheckoutPage() {
                   <Banknote className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-semibold text-gray-900">Cash</p>
-                  <p className="text-sm text-gray-500">Pay at the counter</p>
+                  <p className="font-semibold text-gray-900">Efectivo</p>
+                  <p className="text-sm text-gray-500">Paga en caja</p>
                 </div>
                 {paymentMethod === 'cash' && (
                   <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
@@ -583,7 +583,7 @@ export default function CheckoutPage() {
               </button>
             </div>
 
-            {/* Pay Button */}
+            {/* Botón Pagar */}
             <button
               onClick={handlePayment}
               disabled={!paymentMethod || isProcessing}
@@ -596,11 +596,11 @@ export default function CheckoutPage() {
               {isProcessing ? (
                 <>
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Processing...
+                  Procesando...
                 </>
               ) : (
                 <>
-                  Pay {formatCurrency(yourShare)}
+                  Pagar {formatCurrency(yourShare)}
                   <ChevronRight className="w-5 h-5" />
                 </>
               )}
@@ -608,10 +608,10 @@ export default function CheckoutPage() {
           </div>
         )}
 
-        {/* Confirmation Step */}
+        {/* Paso: Confirmación */}
         {currentStep === 'confirmation' && (
           <div className="animate-fade-in text-center py-12 space-y-8">
-            {/* Success Icon */}
+            {/* Icono de Éxito */}
             <div className="relative mx-auto w-24 h-24">
               <div className="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-75" />
               <div className="relative w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center animate-check-bounce shadow-xl shadow-green-500/30">
@@ -619,23 +619,23 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Success Message */}
+            {/* Mensaje de Éxito */}
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-                Payment Complete!
+                ¡Pago Completado!
               </h1>
               <p className="text-gray-500">
-                Thank you for dining with us
+                Gracias por visitarnos
               </p>
             </div>
 
-            {/* Receipt Summary */}
+            {/* Resumen del Recibo */}
             <div className="bg-white rounded-2xl p-6 text-left space-y-4 max-w-sm mx-auto border border-gray-200 shadow-sm">
               <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
                 <Sparkles className="w-5 h-5 text-amber-500" />
                 <div>
                   <p className="font-semibold text-gray-900">{RESTAURANT_NAME}</p>
-                  <p className="text-sm text-gray-500">Table {TABLE_NUMBER}</p>
+                  <p className="text-sm text-gray-500">Mesa {TABLE_NUMBER}</p>
                 </div>
               </div>
 
@@ -645,31 +645,31 @@ export default function CheckoutPage() {
                   <span className="text-gray-900">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Tax</span>
+                  <span className="text-gray-500">IVA</span>
                   <span className="text-gray-900">{formatCurrency(tax)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Tip ({tipPercentage}%)</span>
+                  <span className="text-gray-500">Propina ({tipPercentage}%)</span>
                   <span className="text-green-600">{formatCurrency(tipAmount)}</span>
                 </div>
                 {splitConfig.enabled && (
                   <div className="flex justify-between text-gray-500">
-                    <span>Split ({splitConfig.numberOfPeople} people)</span>
+                    <span>División ({splitConfig.numberOfPeople} personas)</span>
                     <span>÷{splitConfig.numberOfPeople}</span>
                   </div>
                 )}
               </div>
 
               <div className="pt-4 border-t border-gray-200 flex justify-between font-semibold text-lg">
-                <span className="text-gray-900">You Paid</span>
+                <span className="text-gray-900">Pagaste</span>
                 <span className="text-green-600">{formatCurrency(yourShare)}</span>
               </div>
             </div>
 
-            {/* Actions */}
+            {/* Acciones */}
             <div className="space-y-3 max-w-sm mx-auto">
               <button className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-gray-800 transition-all shadow-lg shadow-gray-900/10">
-                Email Receipt
+                Enviar Recibo por Email
               </button>
               <button
                 onClick={() => {
@@ -680,14 +680,14 @@ export default function CheckoutPage() {
                 }}
                 className="w-full py-4 text-gray-600 font-medium hover:text-gray-900 transition-colors"
               >
-                Start New Order
+                Nuevo Pedido
               </button>
             </div>
           </div>
         )}
       </main>
 
-      {/* Safe Area Bottom Padding */}
+      {/* Padding inferior para área segura */}
       <div className="h-8" />
     </div>
   )
