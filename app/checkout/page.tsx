@@ -43,7 +43,7 @@ const mockItems: OrderItem[] = [
 
 const TABLE_NUMBER = 12
 const RESTAURANT_NAME = 'La Brasserie'
-const TAX_RATE = 0.16 // IVA México
+const HIPOCONSUMO_RATE = 0.10 // 10% Hipoconsumo
 
 const STEPS: CheckoutStep[] = ['review', 'tip', 'split', 'payment', 'confirmation']
 
@@ -65,7 +65,7 @@ export default function CheckoutPage() {
     []
   )
 
-  const tax = useMemo(() => subtotal * TAX_RATE, [subtotal])
+  const hipoconsumo = useMemo(() => subtotal * HIPOCONSUMO_RATE, [subtotal])
 
   const tipPercentage = useMemo(() =>
     tipPreset === 'custom' ? customTip : tipPreset,
@@ -78,8 +78,8 @@ export default function CheckoutPage() {
   )
 
   const total = useMemo(() =>
-    subtotal + tax + tipAmount,
-    [subtotal, tax, tipAmount]
+    subtotal + hipoconsumo + tipAmount,
+    [subtotal, hipoconsumo, tipAmount]
   )
 
   const yourShare = useMemo(() =>
@@ -226,12 +226,12 @@ export default function CheckoutPage() {
                 <span className="tabular-nums">{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-gray-600">
-                <span>IVA ({(TAX_RATE * 100).toFixed(0)}%)</span>
-                <span className="tabular-nums">{formatCurrency(tax)}</span>
+                <span>Hipoconsumo ({(HIPOCONSUMO_RATE * 100).toFixed(0)}%)</span>
+                <span className="tabular-nums">{formatCurrency(hipoconsumo)}</span>
               </div>
               <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-lg text-gray-900">
                 <span>Total</span>
-                <span className="tabular-nums">{formatCurrency(subtotal + tax)}</span>
+                <span className="tabular-nums">{formatCurrency(subtotal + hipoconsumo)}</span>
               </div>
             </div>
 
@@ -310,7 +310,7 @@ export default function CheckoutPage() {
             <div className="bg-gray-50 rounded-2xl p-4">
               <div className="flex justify-between text-gray-600 mb-2">
                 <span>Total del Pedido</span>
-                <span className="tabular-nums">{formatCurrency(subtotal + tax)}</span>
+                <span className="tabular-nums">{formatCurrency(subtotal + hipoconsumo)}</span>
               </div>
               <div className="flex justify-between text-gray-600 mb-3">
                 <span>Propina</span>
@@ -645,8 +645,8 @@ export default function CheckoutPage() {
                   <span className="text-gray-900">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">IVA</span>
-                  <span className="text-gray-900">{formatCurrency(tax)}</span>
+                  <span className="text-gray-500">Hipoconsumo</span>
+                  <span className="text-gray-900">{formatCurrency(hipoconsumo)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Propina ({tipPercentage}%)</span>
