@@ -6,16 +6,13 @@ import {
   Check,
   CreditCard,
   Banknote,
-  Users,
-  Receipt,
   Sparkles,
   ChevronRight
 } from 'lucide-react'
 
 // Types
-type CheckoutStep = 'review' | 'tip' | 'split' | 'payment' | 'confirmation'
+type CheckoutStep = 'review' | 'tip' | 'payment' | 'confirmation'
 type TipPreset = 10 | 12 | 15 | 'custom'
-type SplitMethod = 'equal' | 'by-items' | 'custom-amount'
 type PaymentMethod = 'apple-pay' | 'google-pay' | 'card' | 'cash'
 
 interface OrderItem {
@@ -24,12 +21,6 @@ interface OrderItem {
   quantity: number
   price: number
   notes?: string
-}
-
-interface SplitConfig {
-  enabled: boolean
-  method: SplitMethod
-  numberOfPeople: number
 }
 
 // Mock data
@@ -45,17 +36,12 @@ const TABLE_NUMBER = 12
 const RESTAURANT_NAME = 'La Brasserie'
 const HIPOCONSUMO_RATE = 0.10 // 10% Hipoconsumo
 
-const STEPS: CheckoutStep[] = ['review', 'tip', 'split', 'payment', 'confirmation']
+const STEPS: CheckoutStep[] = ['review', 'tip', 'payment', 'confirmation']
 
 export default function CheckoutPage() {
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('review')
   const [tipPreset, setTipPreset] = useState<TipPreset>(15)
   const [customTip, setCustomTip] = useState<number>(18)
-  const [splitConfig, setSplitConfig] = useState<SplitConfig>({
-    enabled: false,
-    method: 'equal',
-    numberOfPeople: 2,
-  })
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
@@ -80,11 +66,6 @@ export default function CheckoutPage() {
   const total = useMemo(() =>
     subtotal + hipoconsumo + tipAmount,
     [subtotal, hipoconsumo, tipAmount]
-  )
-
-  const yourShare = useMemo(() =>
-    splitConfig.enabled ? total / splitConfig.numberOfPeople : total,
-    [splitConfig, total]
   )
 
   const currentStepIndex = STEPS.indexOf(currentStep)
@@ -331,131 +312,6 @@ export default function CheckoutPage() {
               onClick={goNext}
               className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
             >
-              Continuar
-            </button>
-          </div>
-        )}
-
-        {/* Paso: Dividir Cuenta */}
-        {currentStep === 'split' && (
-          <div className="animate-fade-in space-y-6">
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-                ¿Dividir la Cuenta?
-              </h1>
-              <p className="text-gray-500 mt-1">
-                Divide el pago con tu grupo
-              </p>
-            </div>
-
-            {/* Toggle Dividir */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                    <Users className="w-5 h-5 text-gray-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Dividir Cuenta</p>
-                    <p className="text-sm text-gray-500">Partes iguales o personalizado</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setSplitConfig(prev => ({ ...prev, enabled: !prev.enabled }))}
-                  className={`w-12 h-7 rounded-full transition-all ${
-                    splitConfig.enabled
-                      ? 'bg-gray-900'
-                      : 'bg-gray-200'
-                  }`}
-                >
-                  <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${
-                    splitConfig.enabled ? 'translate-x-6' : 'translate-x-1'
-                  }`} />
-                </button>
-              </div>
-            </div>
-
-            {/* Opciones de División */}
-            {splitConfig.enabled && (
-              <div className="animate-slide-up space-y-4">
-                {/* Método de División */}
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { value: 'equal', label: 'Partes Iguales', icon: Users },
-                    { value: 'by-items', label: 'Por Platillos', icon: Receipt },
-                    { value: 'custom-amount', label: 'Personalizado', icon: CreditCard },
-                  ].map(({ value, label, icon: Icon }) => (
-                    <button
-                      key={value}
-                      onClick={() => setSplitConfig(prev => ({ ...prev, method: value as SplitMethod }))}
-                      className={`p-4 rounded-xl transition-all text-center ${
-                        splitConfig.method === value
-                          ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      <Icon className="w-5 h-5 mx-auto mb-2" />
-                      <span className="text-xs font-medium">{label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Número de Personas */}
-                {splitConfig.method === 'equal' && (
-                  <div className="bg-gray-50 rounded-2xl p-4">
-                    <p className="text-sm text-gray-500 mb-3">Número de personas</p>
-                    <div className="flex items-center justify-center gap-6">
-                      <button
-                        onClick={() => setSplitConfig(prev => ({
-                          ...prev,
-                          numberOfPeople: Math.max(2, prev.numberOfPeople - 1)
-                        }))}
-                        className="w-12 h-12 rounded-full bg-gray-200 font-bold text-xl text-gray-700 hover:bg-gray-300 transition-colors"
-                      >
-                        −
-                      </button>
-                      <span className="text-4xl font-bold w-16 text-center text-gray-900">
-                        {splitConfig.numberOfPeople}
-                      </span>
-                      <button
-                        onClick={() => setSplitConfig(prev => ({
-                          ...prev,
-                          numberOfPeople: Math.min(12, prev.numberOfPeople + 1)
-                        }))}
-                        className="w-12 h-12 rounded-full bg-gray-200 font-bold text-xl text-gray-700 hover:bg-gray-300 transition-colors"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Tu Parte */}
-                <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white text-center shadow-xl shadow-gray-900/20">
-                  <p className="text-sm opacity-80 mb-1">Tu parte</p>
-                  <p className="text-4xl font-bold">{formatCurrency(yourShare)}</p>
-                  <p className="text-sm opacity-80 mt-2">
-                    de {formatCurrency(total)} en total
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Total sin División */}
-            {!splitConfig.enabled && (
-              <div className="bg-gray-50 rounded-2xl p-4">
-                <div className="flex justify-between font-semibold text-lg text-gray-900">
-                  <span>Total a Pagar</span>
-                  <span className="tabular-nums">{formatCurrency(total)}</span>
-                </div>
-              </div>
-            )}
-
-            {/* Botón Continuar */}
-            <button
-              onClick={goNext}
-              className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
-            >
               Continuar a Pago
             </button>
           </div>
@@ -475,11 +331,9 @@ export default function CheckoutPage() {
 
             {/* Monto a Pagar */}
             <div className="text-center py-6">
-              <p className="text-sm text-gray-500 mb-1">
-                {splitConfig.enabled ? 'Tu parte' : 'Total'}
-              </p>
+              <p className="text-sm text-gray-500 mb-1">Total</p>
               <p className="text-5xl font-bold tracking-tight text-gray-900">
-                {formatCurrency(yourShare)}
+                {formatCurrency(total)}
               </p>
             </div>
 
@@ -602,7 +456,7 @@ export default function CheckoutPage() {
                 </>
               ) : (
                 <>
-                  Pagar {formatCurrency(yourShare)}
+                  Pagar {formatCurrency(total)}
                   <ChevronRight className="w-5 h-5" />
                 </>
               )}
@@ -654,17 +508,11 @@ export default function CheckoutPage() {
                   <span className="text-gray-500">Propina ({tipPercentage}%)</span>
                   <span className="text-green-600">{formatCurrency(tipAmount)}</span>
                 </div>
-                {splitConfig.enabled && (
-                  <div className="flex justify-between text-gray-500">
-                    <span>División ({splitConfig.numberOfPeople} personas)</span>
-                    <span>÷{splitConfig.numberOfPeople}</span>
-                  </div>
-                )}
               </div>
 
               <div className="pt-4 border-t border-gray-200 flex justify-between font-semibold text-lg">
                 <span className="text-gray-900">Pagaste</span>
-                <span className="text-green-600">{formatCurrency(yourShare)}</span>
+                <span className="text-green-600">{formatCurrency(total)}</span>
               </div>
             </div>
 
@@ -677,7 +525,6 @@ export default function CheckoutPage() {
                 onClick={() => {
                   setCurrentStep('review')
                   setTipPreset(15)
-                  setSplitConfig({ enabled: false, method: 'equal', numberOfPeople: 2 })
                   setPaymentMethod(null)
                 }}
                 className="w-full py-4 text-gray-600 font-medium hover:text-gray-900 transition-colors"
