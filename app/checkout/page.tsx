@@ -89,10 +89,6 @@ export default function CheckoutPage() {
 
   const currentStepIndex = STEPS.indexOf(currentStep)
 
-  const goToStep = useCallback((step: CheckoutStep) => {
-    setCurrentStep(step)
-  }, [])
-
   const goNext = useCallback(() => {
     const nextIndex = currentStepIndex + 1
     if (nextIndex < STEPS.length) {
@@ -124,18 +120,18 @@ export default function CheckoutPage() {
     }).format(amount)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-gray-800/50">
+      <header className="sticky top-0 z-50 glass border-b border-gray-200/50">
         <div className="max-w-lg mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {currentStep !== 'review' && currentStep !== 'confirmation' ? (
               <button
                 onClick={goBack}
-                className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors"
                 aria-label="Go back"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-5 h-5 text-gray-700" />
               </button>
             ) : (
               <div className="w-9" />
@@ -144,11 +140,11 @@ export default function CheckoutPage() {
             <div className="text-center">
               <div className="flex items-center gap-2 justify-center">
                 <Sparkles className="w-4 h-4 text-amber-500" />
-                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                <span className="text-sm font-medium text-gray-600">
                   {RESTAURANT_NAME}
                 </span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-500">
+              <p className="text-xs text-gray-500">
                 Mesa {TABLE_NUMBER}
               </p>
             </div>
@@ -166,8 +162,8 @@ export default function CheckoutPage() {
                   key={step}
                   className={`h-1 flex-1 rounded-full transition-all duration-300 ${
                     index <= currentStepIndex
-                      ? 'bg-gray-900 dark:bg-white'
-                      : 'bg-gray-200 dark:bg-gray-700'
+                      ? 'bg-gray-900'
+                      : 'bg-gray-200'
                   }`}
                 />
               ))}
@@ -182,40 +178,40 @@ export default function CheckoutPage() {
         {currentStep === 'review' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
                 Review Your Order
               </h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-gray-500 mt-1">
                 You&apos;re paying for Table {TABLE_NUMBER}
               </p>
             </div>
 
             {/* Items List */}
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
               <div className="max-h-[320px] overflow-y-auto">
                 {mockItems.map((item, index) => (
                   <div
                     key={item.id}
                     className={`flex items-start justify-between p-4 ${
                       index !== mockItems.length - 1
-                        ? 'border-b border-gray-100 dark:border-gray-800'
+                        ? 'border-b border-gray-100'
                         : ''
                     }`}
                   >
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-400 dark:text-gray-500 w-5">
+                        <span className="text-sm text-gray-400 w-5">
                           {item.quantity}×
                         </span>
-                        <span className="font-medium">{item.name}</span>
+                        <span className="font-medium text-gray-900">{item.name}</span>
                       </div>
                       {item.notes && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 ml-7 mt-0.5">
+                        <p className="text-sm text-gray-500 ml-7 mt-0.5">
                           {item.notes}
                         </p>
                       )}
                     </div>
-                    <span className="font-medium tabular-nums">
+                    <span className="font-medium tabular-nums text-gray-900">
                       {formatCurrency(item.price * item.quantity)}
                     </span>
                   </div>
@@ -224,16 +220,16 @@ export default function CheckoutPage() {
             </div>
 
             {/* Totals */}
-            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4 space-y-3">
-              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+            <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
+              <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
                 <span className="tabular-nums">{formatCurrency(subtotal)}</span>
               </div>
-              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+              <div className="flex justify-between text-gray-600">
                 <span>Tax ({(TAX_RATE * 100).toFixed(2)}%)</span>
                 <span className="tabular-nums">{formatCurrency(tax)}</span>
               </div>
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between font-semibold text-lg">
+              <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-lg text-gray-900">
                 <span>Total</span>
                 <span className="tabular-nums">{formatCurrency(subtotal + tax)}</span>
               </div>
@@ -242,7 +238,7 @@ export default function CheckoutPage() {
             {/* Continue Button */}
             <button
               onClick={goNext}
-              className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold text-lg hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all"
+              className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
             >
               Continue to Tip
             </button>
@@ -253,20 +249,20 @@ export default function CheckoutPage() {
         {currentStep === 'tip' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
                 Add a Tip
               </h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-gray-500 mt-1">
                 Show appreciation for great service
               </p>
             </div>
 
             {/* Tip Display */}
             <div className="text-center py-8">
-              <div className="text-5xl font-bold tracking-tight">
+              <div className="text-5xl font-bold tracking-tight text-gray-900">
                 {formatCurrency(tipAmount)}
               </div>
-              <p className="text-gray-500 dark:text-gray-400 mt-2">
+              <p className="text-gray-500 mt-2">
                 {tipPercentage}% of {formatCurrency(subtotal)}
               </p>
             </div>
@@ -279,8 +275,8 @@ export default function CheckoutPage() {
                   onClick={() => setTipPreset(preset)}
                   className={`py-4 rounded-xl font-semibold transition-all ${
                     tipPreset === preset
-                      ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 scale-[1.02]'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                      ? 'bg-gray-900 text-white scale-[1.02] shadow-lg shadow-gray-900/20'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {preset === 'custom' ? 'Custom' : `${preset}%`}
@@ -302,7 +298,7 @@ export default function CheckoutPage() {
                 />
                 <div className="flex justify-between text-sm text-gray-500">
                   <span>0%</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">
+                  <span className="font-semibold text-gray-900">
                     {customTip}%
                   </span>
                   <span>30%</span>
@@ -311,18 +307,18 @@ export default function CheckoutPage() {
             )}
 
             {/* Updated Total */}
-            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4">
-              <div className="flex justify-between text-gray-600 dark:text-gray-400 mb-2">
+            <div className="bg-gray-50 rounded-2xl p-4">
+              <div className="flex justify-between text-gray-600 mb-2">
                 <span>Order Total</span>
                 <span className="tabular-nums">{formatCurrency(subtotal + tax)}</span>
               </div>
-              <div className="flex justify-between text-gray-600 dark:text-gray-400 mb-3">
+              <div className="flex justify-between text-gray-600 mb-3">
                 <span>Tip</span>
-                <span className="tabular-nums text-green-600 dark:text-green-400">
+                <span className="tabular-nums text-green-600">
                   +{formatCurrency(tipAmount)}
                 </span>
               </div>
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between font-semibold text-lg">
+              <div className="border-t border-gray-200 pt-3 flex justify-between font-semibold text-lg text-gray-900">
                 <span>New Total</span>
                 <span className="tabular-nums">{formatCurrency(total)}</span>
               </div>
@@ -331,7 +327,7 @@ export default function CheckoutPage() {
             {/* Continue Button */}
             <button
               onClick={goNext}
-              className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold text-lg hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all"
+              className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
             >
               Continue
             </button>
@@ -342,23 +338,23 @@ export default function CheckoutPage() {
         {currentStep === 'split' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
                 Split the Bill?
               </h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-gray-500 mt-1">
                 Divide the payment with your group
               </p>
             </div>
 
             {/* Split Toggle */}
-            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+            <div className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                    <Users className="w-5 h-5" />
+                  <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                    <Users className="w-5 h-5 text-gray-600" />
                   </div>
                   <div>
-                    <p className="font-medium">Split Bill</p>
+                    <p className="font-medium text-gray-900">Split Bill</p>
                     <p className="text-sm text-gray-500">Divide evenly or custom</p>
                   </div>
                 </div>
@@ -366,11 +362,11 @@ export default function CheckoutPage() {
                   onClick={() => setSplitConfig(prev => ({ ...prev, enabled: !prev.enabled }))}
                   className={`w-12 h-7 rounded-full transition-all ${
                     splitConfig.enabled
-                      ? 'bg-gray-900 dark:bg-white'
-                      : 'bg-gray-200 dark:bg-gray-700'
+                      ? 'bg-gray-900'
+                      : 'bg-gray-200'
                   }`}
                 >
-                  <div className={`w-5 h-5 bg-white dark:bg-gray-900 rounded-full shadow-md transition-transform ${
+                  <div className={`w-5 h-5 bg-white rounded-full shadow-md transition-transform ${
                     splitConfig.enabled ? 'translate-x-6' : 'translate-x-1'
                   }`} />
                 </button>
@@ -392,8 +388,8 @@ export default function CheckoutPage() {
                       onClick={() => setSplitConfig(prev => ({ ...prev, method: value as SplitMethod }))}
                       className={`p-4 rounded-xl transition-all text-center ${
                         splitConfig.method === value
-                          ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                          ? 'bg-gray-900 text-white shadow-lg shadow-gray-900/20'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                     >
                       <Icon className="w-5 h-5 mx-auto mb-2" />
@@ -404,7 +400,7 @@ export default function CheckoutPage() {
 
                 {/* Number of People */}
                 {splitConfig.method === 'equal' && (
-                  <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4">
+                  <div className="bg-gray-50 rounded-2xl p-4">
                     <p className="text-sm text-gray-500 mb-3">Number of people</p>
                     <div className="flex items-center justify-center gap-6">
                       <button
@@ -412,11 +408,11 @@ export default function CheckoutPage() {
                           ...prev,
                           numberOfPeople: Math.max(2, prev.numberOfPeople - 1)
                         }))}
-                        className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 font-bold text-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        className="w-12 h-12 rounded-full bg-gray-200 font-bold text-xl text-gray-700 hover:bg-gray-300 transition-colors"
                       >
                         −
                       </button>
-                      <span className="text-4xl font-bold w-16 text-center">
+                      <span className="text-4xl font-bold w-16 text-center text-gray-900">
                         {splitConfig.numberOfPeople}
                       </span>
                       <button
@@ -424,7 +420,7 @@ export default function CheckoutPage() {
                           ...prev,
                           numberOfPeople: Math.min(12, prev.numberOfPeople + 1)
                         }))}
-                        className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 font-bold text-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        className="w-12 h-12 rounded-full bg-gray-200 font-bold text-xl text-gray-700 hover:bg-gray-300 transition-colors"
                       >
                         +
                       </button>
@@ -433,7 +429,7 @@ export default function CheckoutPage() {
                 )}
 
                 {/* Your Share */}
-                <div className="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-100 dark:to-gray-200 rounded-2xl p-6 text-white dark:text-gray-900 text-center">
+                <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white text-center shadow-xl shadow-gray-900/20">
                   <p className="text-sm opacity-80 mb-1">Your share</p>
                   <p className="text-4xl font-bold">{formatCurrency(yourShare)}</p>
                   <p className="text-sm opacity-80 mt-2">
@@ -445,8 +441,8 @@ export default function CheckoutPage() {
 
             {/* Total or Skip Split */}
             {!splitConfig.enabled && (
-              <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4">
-                <div className="flex justify-between font-semibold text-lg">
+              <div className="bg-gray-50 rounded-2xl p-4">
+                <div className="flex justify-between font-semibold text-lg text-gray-900">
                   <span>Total to Pay</span>
                   <span className="tabular-nums">{formatCurrency(total)}</span>
                 </div>
@@ -456,7 +452,7 @@ export default function CheckoutPage() {
             {/* Continue Button */}
             <button
               onClick={goNext}
-              className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold text-lg hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all"
+              className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold text-lg hover:bg-gray-800 active:scale-[0.98] transition-all shadow-lg shadow-gray-900/10"
             >
               Continue to Payment
             </button>
@@ -467,20 +463,20 @@ export default function CheckoutPage() {
         {currentStep === 'payment' && (
           <div className="animate-fade-in space-y-6">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
                 Payment Method
               </h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-gray-500 mt-1">
                 Choose how you&apos;d like to pay
               </p>
             </div>
 
             {/* Amount to Pay */}
             <div className="text-center py-6">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+              <p className="text-sm text-gray-500 mb-1">
                 {splitConfig.enabled ? 'Your share' : 'Total'}
               </p>
-              <p className="text-5xl font-bold tracking-tight">
+              <p className="text-5xl font-bold tracking-tight text-gray-900">
                 {formatCurrency(yourShare)}
               </p>
             </div>
@@ -492,8 +488,8 @@ export default function CheckoutPage() {
                 onClick={() => setPaymentMethod('apple-pay')}
                 className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
                   paymentMethod === 'apple-pay'
-                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
-                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                    ? 'border-gray-900 bg-gray-50'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
               >
                 <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
@@ -502,12 +498,12 @@ export default function CheckoutPage() {
                   </svg>
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-semibold">Apple Pay</p>
+                  <p className="font-semibold text-gray-900">Apple Pay</p>
                   <p className="text-sm text-gray-500">Fast & secure</p>
                 </div>
                 {paymentMethod === 'apple-pay' && (
-                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
-                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white" />
                   </div>
                 )}
               </button>
@@ -517,8 +513,8 @@ export default function CheckoutPage() {
                 onClick={() => setPaymentMethod('google-pay')}
                 className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
                   paymentMethod === 'google-pay'
-                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
-                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                    ? 'border-gray-900 bg-gray-50'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
               >
                 <div className="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center">
@@ -530,12 +526,12 @@ export default function CheckoutPage() {
                   </svg>
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-semibold">Google Pay</p>
+                  <p className="font-semibold text-gray-900">Google Pay</p>
                   <p className="text-sm text-gray-500">Pay with Google</p>
                 </div>
                 {paymentMethod === 'google-pay' && (
-                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
-                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white" />
                   </div>
                 )}
               </button>
@@ -545,20 +541,20 @@ export default function CheckoutPage() {
                 onClick={() => setPaymentMethod('card')}
                 className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
                   paymentMethod === 'card'
-                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
-                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                    ? 'border-gray-900 bg-gray-50'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
                   <CreditCard className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-semibold">Credit Card</p>
+                  <p className="font-semibold text-gray-900">Credit Card</p>
                   <p className="text-sm text-gray-500">Visa, Mastercard, Amex</p>
                 </div>
                 {paymentMethod === 'card' && (
-                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
-                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white" />
                   </div>
                 )}
               </button>
@@ -568,20 +564,20 @@ export default function CheckoutPage() {
                 onClick={() => setPaymentMethod('cash')}
                 className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
                   paymentMethod === 'cash'
-                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
-                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                    ? 'border-gray-900 bg-gray-50'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
               >
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
                   <Banknote className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1 text-left">
-                  <p className="font-semibold">Cash</p>
+                  <p className="font-semibold text-gray-900">Cash</p>
                   <p className="text-sm text-gray-500">Pay at the counter</p>
                 </div>
                 {paymentMethod === 'cash' && (
-                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
-                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white" />
                   </div>
                 )}
               </button>
@@ -593,8 +589,8 @@ export default function CheckoutPage() {
               disabled={!paymentMethod || isProcessing}
               className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all flex items-center justify-center gap-2 ${
                 paymentMethod && !isProcessing
-                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98]'
-                  : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                  ? 'bg-gray-900 text-white hover:bg-gray-800 active:scale-[0.98] shadow-lg shadow-gray-900/20'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
               }`}
             >
               {isProcessing ? (
@@ -617,28 +613,28 @@ export default function CheckoutPage() {
           <div className="animate-fade-in text-center py-12 space-y-8">
             {/* Success Icon */}
             <div className="relative mx-auto w-24 h-24">
-              <div className="absolute inset-0 bg-green-100 dark:bg-green-900/30 rounded-full animate-ping opacity-75" />
-              <div className="relative w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center animate-check-bounce">
+              <div className="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-75" />
+              <div className="relative w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center animate-check-bounce shadow-xl shadow-green-500/30">
                 <Check className="w-12 h-12 text-white" strokeWidth={3} />
               </div>
             </div>
 
             {/* Success Message */}
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight">
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                 Payment Complete!
               </h1>
-              <p className="text-gray-500 dark:text-gray-400">
+              <p className="text-gray-500">
                 Thank you for dining with us
               </p>
             </div>
 
             {/* Receipt Summary */}
-            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 text-left space-y-4 max-w-sm mx-auto">
-              <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="bg-white rounded-2xl p-6 text-left space-y-4 max-w-sm mx-auto border border-gray-200 shadow-sm">
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
                 <Sparkles className="w-5 h-5 text-amber-500" />
                 <div>
-                  <p className="font-semibold">{RESTAURANT_NAME}</p>
+                  <p className="font-semibold text-gray-900">{RESTAURANT_NAME}</p>
                   <p className="text-sm text-gray-500">Table {TABLE_NUMBER}</p>
                 </div>
               </div>
@@ -646,11 +642,11 @@ export default function CheckoutPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Subtotal</span>
-                  <span>{formatCurrency(subtotal)}</span>
+                  <span className="text-gray-900">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Tax</span>
-                  <span>{formatCurrency(tax)}</span>
+                  <span className="text-gray-900">{formatCurrency(tax)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Tip ({tipPercentage}%)</span>
@@ -664,15 +660,15 @@ export default function CheckoutPage() {
                 )}
               </div>
 
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between font-semibold text-lg">
-                <span>You Paid</span>
+              <div className="pt-4 border-t border-gray-200 flex justify-between font-semibold text-lg">
+                <span className="text-gray-900">You Paid</span>
                 <span className="text-green-600">{formatCurrency(yourShare)}</span>
               </div>
             </div>
 
             {/* Actions */}
             <div className="space-y-3 max-w-sm mx-auto">
-              <button className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-all">
+              <button className="w-full py-4 bg-gray-900 text-white rounded-2xl font-semibold hover:bg-gray-800 transition-all shadow-lg shadow-gray-900/10">
                 Email Receipt
               </button>
               <button
@@ -682,7 +678,7 @@ export default function CheckoutPage() {
                   setSplitConfig({ enabled: false, method: 'equal', numberOfPeople: 2 })
                   setPaymentMethod(null)
                 }}
-                className="w-full py-4 text-gray-600 dark:text-gray-400 font-medium hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="w-full py-4 text-gray-600 font-medium hover:text-gray-900 transition-colors"
               >
                 Start New Order
               </button>

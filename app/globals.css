@@ -10,16 +10,6 @@
   --card: #f9fafb;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #fafafa;
-    --muted: #9ca3af;
-    --border: #374151;
-    --card: #111827;
-  }
-}
-
 * {
   box-sizing: border-box;
   padding: 0;
@@ -118,22 +108,4 @@ input[type="range"]::-moz-range-thumb {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-}
-
-@media (prefers-color-scheme: dark) {
-  .glass {
-    background: rgba(17, 24, 39, 0.8);
-  }
-
-  input[type="range"] {
-    background: #374151;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    background: #ffffff;
-  }
-
-  input[type="range"]::-moz-range-thumb {
-    background: #ffffff;
-  }
 }
