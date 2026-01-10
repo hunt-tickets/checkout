@@ -34,11 +34,11 @@ interface SplitConfig {
 
 // Mock data
 const mockItems: OrderItem[] = [
-  { id: '1', name: 'Wagyu Ribeye Steak', quantity: 1, price: 89.00, notes: 'Término medio' },
-  { id: '2', name: 'Risotto de Trufa', quantity: 1, price: 34.00 },
-  { id: '3', name: 'Ensalada César', quantity: 2, price: 16.00 },
-  { id: '4', name: 'Château Margaux 2015', quantity: 1, price: 285.00 },
-  { id: '5', name: 'Crème Brûlée', quantity: 2, price: 14.00 },
+  { id: '1', name: 'Wagyu Ribeye Steak', quantity: 1, price: 189000, notes: 'Término medio' },
+  { id: '2', name: 'Risotto de Trufa', quantity: 1, price: 68000 },
+  { id: '3', name: 'Ensalada César', quantity: 2, price: 32000 },
+  { id: '4', name: 'Château Margaux 2015', quantity: 1, price: 1250000 },
+  { id: '5', name: 'Crème Brûlée', quantity: 2, price: 28000 },
 ]
 
 const TABLE_NUMBER = 12
@@ -114,9 +114,11 @@ export default function CheckoutPage() {
   }, [paymentMethod])
 
   const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('es-MX', {
+    new Intl.NumberFormat('es-CO', {
       style: 'currency',
-      currency: 'MXN',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount)
 
   return (
