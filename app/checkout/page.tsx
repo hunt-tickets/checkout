@@ -1,0 +1,698 @@
+'use client'
+
+import { useState, useCallback, useMemo } from 'react'
+import {
+  ChevronLeft,
+  Check,
+  CreditCard,
+  Banknote,
+  Users,
+  Receipt,
+  Sparkles,
+  ChevronRight
+} from 'lucide-react'
+
+// Types
+type CheckoutStep = 'review' | 'tip' | 'split' | 'payment' | 'confirmation'
+type TipPreset = 10 | 12 | 15 | 'custom'
+type SplitMethod = 'equal' | 'by-items' | 'custom-amount'
+type PaymentMethod = 'apple-pay' | 'google-pay' | 'card' | 'cash'
+
+interface OrderItem {
+  id: string
+  name: string
+  quantity: number
+  price: number
+  notes?: string
+}
+
+interface SplitConfig {
+  enabled: boolean
+  method: SplitMethod
+  numberOfPeople: number
+}
+
+// Mock data
+const mockItems: OrderItem[] = [
+  { id: '1', name: 'Wagyu Ribeye Steak', quantity: 1, price: 89.00, notes: 'Medium rare' },
+  { id: '2', name: 'Truffle Risotto', quantity: 1, price: 34.00 },
+  { id: '3', name: 'Caesar Salad', quantity: 2, price: 16.00 },
+  { id: '4', name: 'Château Margaux 2015', quantity: 1, price: 285.00 },
+  { id: '5', name: 'Crème Brûlée', quantity: 2, price: 14.00 },
+]
+
+const TABLE_NUMBER = 12
+const RESTAURANT_NAME = 'La Brasserie'
+const TAX_RATE = 0.0875
+
+const STEPS: CheckoutStep[] = ['review', 'tip', 'split', 'payment', 'confirmation']
+
+export default function CheckoutPage() {
+  const [currentStep, setCurrentStep] = useState<CheckoutStep>('review')
+  const [tipPreset, setTipPreset] = useState<TipPreset>(15)
+  const [customTip, setCustomTip] = useState<number>(18)
+  const [splitConfig, setSplitConfig] = useState<SplitConfig>({
+    enabled: false,
+    method: 'equal',
+    numberOfPeople: 2,
+  })
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
+
+  // Calculations
+  const subtotal = useMemo(() =>
+    mockItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+    []
+  )
+
+  const tax = useMemo(() => subtotal * TAX_RATE, [subtotal])
+
+  const tipPercentage = useMemo(() =>
+    tipPreset === 'custom' ? customTip : tipPreset,
+    [tipPreset, customTip]
+  )
+
+  const tipAmount = useMemo(() =>
+    subtotal * (tipPercentage / 100),
+    [subtotal, tipPercentage]
+  )
+
+  const total = useMemo(() =>
+    subtotal + tax + tipAmount,
+    [subtotal, tax, tipAmount]
+  )
+
+  const yourShare = useMemo(() =>
+    splitConfig.enabled ? total / splitConfig.numberOfPeople : total,
+    [splitConfig, total]
+  )
+
+  const currentStepIndex = STEPS.indexOf(currentStep)
+
+  const goToStep = useCallback((step: CheckoutStep) => {
+    setCurrentStep(step)
+  }, [])
+
+  const goNext = useCallback(() => {
+    const nextIndex = currentStepIndex + 1
+    if (nextIndex < STEPS.length) {
+      setCurrentStep(STEPS[nextIndex])
+    }
+  }, [currentStepIndex])
+
+  const goBack = useCallback(() => {
+    const prevIndex = currentStepIndex - 1
+    if (prevIndex >= 0) {
+      setCurrentStep(STEPS[prevIndex])
+    }
+  }, [currentStepIndex])
+
+  const handlePayment = useCallback(async () => {
+    if (!paymentMethod) return
+
+    setIsProcessing(true)
+    // Simulate payment processing
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    setIsProcessing(false)
+    setCurrentStep('confirmation')
+  }, [paymentMethod])
+
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount)
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+      {/* Header */}
+      <header className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-gray-800/50">
+        <div className="max-w-lg mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {currentStep !== 'review' && currentStep !== 'confirmation' ? (
+              <button
+                onClick={goBack}
+                className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Go back"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+            ) : (
+              <div className="w-9" />
+            )}
+
+            <div className="text-center">
+              <div className="flex items-center gap-2 justify-center">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  {RESTAURANT_NAME}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-500">
+                Mesa {TABLE_NUMBER}
+              </p>
+            </div>
+
+            <div className="w-9" />
+          </div>
+        </div>
+
+        {/* Step Progress */}
+        {currentStep !== 'confirmation' && (
+          <div className="max-w-lg mx-auto px-6 pb-3">
+            <div className="flex items-center gap-1">
+              {STEPS.slice(0, -1).map((step, index) => (
+                <div
+                  key={step}
+                  className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                    index <= currentStepIndex
+                      ? 'bg-gray-900 dark:bg-white'
+                      : 'bg-gray-200 dark:bg-gray-700'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-lg mx-auto px-4 py-6">
+        {/* Review Step */}
+        {currentStep === 'review' && (
+          <div className="animate-fade-in space-y-6">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Review Your Order
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">
+                You&apos;re paying for Table {TABLE_NUMBER}
+              </p>
+            </div>
+
+            {/* Items List */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+              <div className="max-h-[320px] overflow-y-auto">
+                {mockItems.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`flex items-start justify-between p-4 ${
+                      index !== mockItems.length - 1
+                        ? 'border-b border-gray-100 dark:border-gray-800'
+                        : ''
+                    }`}
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-400 dark:text-gray-500 w-5">
+                          {item.quantity}×
+                        </span>
+                        <span className="font-medium">{item.name}</span>
+                      </div>
+                      {item.notes && (
+                        <p className="text-sm text-gray-500 dark:text-gray-400 ml-7 mt-0.5">
+                          {item.notes}
+                        </p>
+                      )}
+                    </div>
+                    <span className="font-medium tabular-nums">
+                      {formatCurrency(item.price * item.quantity)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Totals */}
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4 space-y-3">
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <span>Subtotal</span>
+                <span className="tabular-nums">{formatCurrency(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                <span>Tax ({(TAX_RATE * 100).toFixed(2)}%)</span>
+                <span className="tabular-nums">{formatCurrency(tax)}</span>
+              </div>
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between font-semibold text-lg">
+                <span>Total</span>
+                <span className="tabular-nums">{formatCurrency(subtotal + tax)}</span>
+              </div>
+            </div>
+
+            {/* Continue Button */}
+            <button
+              onClick={goNext}
+              className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold text-lg hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all"
+            >
+              Continue to Tip
+            </button>
+          </div>
+        )}
+
+        {/* Tip Step */}
+        {currentStep === 'tip' && (
+          <div className="animate-fade-in space-y-6">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Add a Tip
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">
+                Show appreciation for great service
+              </p>
+            </div>
+
+            {/* Tip Display */}
+            <div className="text-center py-8">
+              <div className="text-5xl font-bold tracking-tight">
+                {formatCurrency(tipAmount)}
+              </div>
+              <p className="text-gray-500 dark:text-gray-400 mt-2">
+                {tipPercentage}% of {formatCurrency(subtotal)}
+              </p>
+            </div>
+
+            {/* Tip Presets */}
+            <div className="grid grid-cols-4 gap-3">
+              {([10, 12, 15, 'custom'] as TipPreset[]).map((preset) => (
+                <button
+                  key={preset}
+                  onClick={() => setTipPreset(preset)}
+                  className={`py-4 rounded-xl font-semibold transition-all ${
+                    tipPreset === preset
+                      ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 scale-[1.02]'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {preset === 'custom' ? 'Custom' : `${preset}%`}
+                </button>
+              ))}
+            </div>
+
+            {/* Custom Tip Slider */}
+            {tipPreset === 'custom' && (
+              <div className="animate-slide-up space-y-4 pt-4">
+                <input
+                  type="range"
+                  min="0"
+                  max="30"
+                  step="1"
+                  value={customTip}
+                  onChange={(e) => setCustomTip(Number(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>0%</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {customTip}%
+                  </span>
+                  <span>30%</span>
+                </div>
+              </div>
+            )}
+
+            {/* Updated Total */}
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4">
+              <div className="flex justify-between text-gray-600 dark:text-gray-400 mb-2">
+                <span>Order Total</span>
+                <span className="tabular-nums">{formatCurrency(subtotal + tax)}</span>
+              </div>
+              <div className="flex justify-between text-gray-600 dark:text-gray-400 mb-3">
+                <span>Tip</span>
+                <span className="tabular-nums text-green-600 dark:text-green-400">
+                  +{formatCurrency(tipAmount)}
+                </span>
+              </div>
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-3 flex justify-between font-semibold text-lg">
+                <span>New Total</span>
+                <span className="tabular-nums">{formatCurrency(total)}</span>
+              </div>
+            </div>
+
+            {/* Continue Button */}
+            <button
+              onClick={goNext}
+              className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold text-lg hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all"
+            >
+              Continue
+            </button>
+          </div>
+        )}
+
+        {/* Split Step */}
+        {currentStep === 'split' && (
+          <div className="animate-fade-in space-y-6">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Split the Bill?
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">
+                Divide the payment with your group
+              </p>
+            </div>
+
+            {/* Split Toggle */}
+            <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+                    <Users className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Split Bill</p>
+                    <p className="text-sm text-gray-500">Divide evenly or custom</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSplitConfig(prev => ({ ...prev, enabled: !prev.enabled }))}
+                  className={`w-12 h-7 rounded-full transition-all ${
+                    splitConfig.enabled
+                      ? 'bg-gray-900 dark:bg-white'
+                      : 'bg-gray-200 dark:bg-gray-700'
+                  }`}
+                >
+                  <div className={`w-5 h-5 bg-white dark:bg-gray-900 rounded-full shadow-md transition-transform ${
+                    splitConfig.enabled ? 'translate-x-6' : 'translate-x-1'
+                  }`} />
+                </button>
+              </div>
+            </div>
+
+            {/* Split Options */}
+            {splitConfig.enabled && (
+              <div className="animate-slide-up space-y-4">
+                {/* Split Method */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { value: 'equal', label: 'Equal Split', icon: Users },
+                    { value: 'by-items', label: 'By Items', icon: Receipt },
+                    { value: 'custom-amount', label: 'Custom', icon: CreditCard },
+                  ].map(({ value, label, icon: Icon }) => (
+                    <button
+                      key={value}
+                      onClick={() => setSplitConfig(prev => ({ ...prev, method: value as SplitMethod }))}
+                      className={`p-4 rounded-xl transition-all text-center ${
+                        splitConfig.method === value
+                          ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                      }`}
+                    >
+                      <Icon className="w-5 h-5 mx-auto mb-2" />
+                      <span className="text-xs font-medium">{label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Number of People */}
+                {splitConfig.method === 'equal' && (
+                  <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4">
+                    <p className="text-sm text-gray-500 mb-3">Number of people</p>
+                    <div className="flex items-center justify-center gap-6">
+                      <button
+                        onClick={() => setSplitConfig(prev => ({
+                          ...prev,
+                          numberOfPeople: Math.max(2, prev.numberOfPeople - 1)
+                        }))}
+                        className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 font-bold text-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                      >
+                        −
+                      </button>
+                      <span className="text-4xl font-bold w-16 text-center">
+                        {splitConfig.numberOfPeople}
+                      </span>
+                      <button
+                        onClick={() => setSplitConfig(prev => ({
+                          ...prev,
+                          numberOfPeople: Math.min(12, prev.numberOfPeople + 1)
+                        }))}
+                        className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 font-bold text-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Your Share */}
+                <div className="bg-gradient-to-br from-gray-900 to-gray-800 dark:from-gray-100 dark:to-gray-200 rounded-2xl p-6 text-white dark:text-gray-900 text-center">
+                  <p className="text-sm opacity-80 mb-1">Your share</p>
+                  <p className="text-4xl font-bold">{formatCurrency(yourShare)}</p>
+                  <p className="text-sm opacity-80 mt-2">
+                    of {formatCurrency(total)} total
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Total or Skip Split */}
+            {!splitConfig.enabled && (
+              <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-4">
+                <div className="flex justify-between font-semibold text-lg">
+                  <span>Total to Pay</span>
+                  <span className="tabular-nums">{formatCurrency(total)}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Continue Button */}
+            <button
+              onClick={goNext}
+              className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold text-lg hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98] transition-all"
+            >
+              Continue to Payment
+            </button>
+          </div>
+        )}
+
+        {/* Payment Step */}
+        {currentStep === 'payment' && (
+          <div className="animate-fade-in space-y-6">
+            <div className="text-center mb-8">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Payment Method
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">
+                Choose how you&apos;d like to pay
+              </p>
+            </div>
+
+            {/* Amount to Pay */}
+            <div className="text-center py-6">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                {splitConfig.enabled ? 'Your share' : 'Total'}
+              </p>
+              <p className="text-5xl font-bold tracking-tight">
+                {formatCurrency(yourShare)}
+              </p>
+            </div>
+
+            {/* Payment Methods */}
+            <div className="space-y-3">
+              {/* Apple Pay */}
+              <button
+                onClick={() => setPaymentMethod('apple-pay')}
+                className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
+                  paymentMethod === 'apple-pay'
+                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
+                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                }`}
+              >
+                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="currentColor">
+                    <path d="M17.0425 12.3095C17.0425 11.0555 17.6785 9.9785 18.7265 9.3495C18.0685 8.4215 17.0645 7.9015 15.7415 7.8195C14.4185 7.7375 13.0155 8.6145 12.5365 8.6145C12.0575 8.6145 10.8335 7.8605 9.7955 7.8605C7.6225 7.9015 5.3065 9.3905 5.3065 12.5145C5.3065 13.4835 5.4945 14.4835 5.8695 15.5145C6.3755 16.9215 8.2015 20.1865 10.1095 20.1045C11.0655 20.0635 11.7385 19.4155 12.9955 19.4155C14.2525 19.4155 14.8705 20.1045 15.9335 20.1045C17.8605 20.0635 19.5025 17.1215 19.9815 15.7145C17.3685 14.4435 17.0425 12.3915 17.0425 12.3095ZM14.7545 6.4515C15.6085 5.4155 15.4995 4.4635 15.4645 4.0865C14.7075 4.1275 13.8395 4.6185 13.3375 5.2145C12.7915 5.8515 12.4575 6.6455 12.5315 7.5185C13.3495 7.5855 14.1045 7.1285 14.7545 6.4515Z"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold">Apple Pay</p>
+                  <p className="text-sm text-gray-500">Fast & secure</p>
+                </div>
+                {paymentMethod === 'apple-pay' && (
+                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  </div>
+                )}
+              </button>
+
+              {/* Google Pay */}
+              <button
+                onClick={() => setPaymentMethod('google-pay')}
+                className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
+                  paymentMethod === 'google-pay'
+                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
+                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                }`}
+              >
+                <div className="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold">Google Pay</p>
+                  <p className="text-sm text-gray-500">Pay with Google</p>
+                </div>
+                {paymentMethod === 'google-pay' && (
+                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  </div>
+                )}
+              </button>
+
+              {/* Credit Card */}
+              <button
+                onClick={() => setPaymentMethod('card')}
+                className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
+                  paymentMethod === 'card'
+                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
+                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                }`}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <CreditCard className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold">Credit Card</p>
+                  <p className="text-sm text-gray-500">Visa, Mastercard, Amex</p>
+                </div>
+                {paymentMethod === 'card' && (
+                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  </div>
+                )}
+              </button>
+
+              {/* Cash */}
+              <button
+                onClick={() => setPaymentMethod('cash')}
+                className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
+                  paymentMethod === 'cash'
+                    ? 'border-gray-900 dark:border-white bg-gray-50 dark:bg-gray-900'
+                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                }`}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                  <Banknote className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold">Cash</p>
+                  <p className="text-sm text-gray-500">Pay at the counter</p>
+                </div>
+                {paymentMethod === 'cash' && (
+                  <div className="w-6 h-6 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white dark:text-gray-900" />
+                  </div>
+                )}
+              </button>
+            </div>
+
+            {/* Pay Button */}
+            <button
+              onClick={handlePayment}
+              disabled={!paymentMethod || isProcessing}
+              className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all flex items-center justify-center gap-2 ${
+                paymentMethod && !isProcessing
+                  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 active:scale-[0.98]'
+                  : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+              }`}
+            >
+              {isProcessing ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  Pay {formatCurrency(yourShare)}
+                  <ChevronRight className="w-5 h-5" />
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Confirmation Step */}
+        {currentStep === 'confirmation' && (
+          <div className="animate-fade-in text-center py-12 space-y-8">
+            {/* Success Icon */}
+            <div className="relative mx-auto w-24 h-24">
+              <div className="absolute inset-0 bg-green-100 dark:bg-green-900/30 rounded-full animate-ping opacity-75" />
+              <div className="relative w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center animate-check-bounce">
+                <Check className="w-12 h-12 text-white" strokeWidth={3} />
+              </div>
+            </div>
+
+            {/* Success Message */}
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold tracking-tight">
+                Payment Complete!
+              </h1>
+              <p className="text-gray-500 dark:text-gray-400">
+                Thank you for dining with us
+              </p>
+            </div>
+
+            {/* Receipt Summary */}
+            <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 text-left space-y-4 max-w-sm mx-auto">
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                <Sparkles className="w-5 h-5 text-amber-500" />
+                <div>
+                  <p className="font-semibold">{RESTAURANT_NAME}</p>
+                  <p className="text-sm text-gray-500">Table {TABLE_NUMBER}</p>
+                </div>
+              </div>
+
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Subtotal</span>
+                  <span>{formatCurrency(subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Tax</span>
+                  <span>{formatCurrency(tax)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Tip ({tipPercentage}%)</span>
+                  <span className="text-green-600">{formatCurrency(tipAmount)}</span>
+                </div>
+                {splitConfig.enabled && (
+                  <div className="flex justify-between text-gray-500">
+                    <span>Split ({splitConfig.numberOfPeople} people)</span>
+                    <span>÷{splitConfig.numberOfPeople}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between font-semibold text-lg">
+                <span>You Paid</span>
+                <span className="text-green-600">{formatCurrency(yourShare)}</span>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="space-y-3 max-w-sm mx-auto">
+              <button className="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl font-semibold hover:bg-gray-800 dark:hover:bg-gray-100 transition-all">
+                Email Receipt
+              </button>
+              <button
+                onClick={() => {
+                  setCurrentStep('review')
+                  setTipPreset(15)
+                  setSplitConfig({ enabled: false, method: 'equal', numberOfPeople: 2 })
+                  setPaymentMethod(null)
+                }}
+                className="w-full py-4 text-gray-600 dark:text-gray-400 font-medium hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Start New Order
+              </button>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Safe Area Bottom Padding */}
+      <div className="h-8" />
+    </div>
+  )
+}
