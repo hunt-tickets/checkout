@@ -13,7 +13,7 @@ import {
 // Types
 type CheckoutStep = 'review' | 'tip' | 'payment' | 'confirmation'
 type TipPreset = 10 | 12 | 15 | 'custom'
-type PaymentMethod = 'apple-pay' | 'google-pay' | 'card' | 'cash'
+type PaymentMethod = 'apple-pay' | 'google-pay' | 'card' | 'pse' | 'cash'
 
 interface OrderItem {
   id: string
@@ -409,6 +409,31 @@ export default function CheckoutPage() {
                   <p className="text-sm text-gray-500">Visa, Mastercard, Amex</p>
                 </div>
                 {paymentMethod === 'card' && (
+                  <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
+                    <Check className="w-4 h-4 text-white" />
+                  </div>
+                )}
+              </button>
+
+              {/* PSE */}
+              <button
+                onClick={() => setPaymentMethod('pse')}
+                className={`w-full p-4 rounded-2xl border-2 transition-all flex items-center gap-4 ${
+                  paymentMethod === 'pse'
+                    ? 'border-gray-900 bg-gray-50'
+                    : 'border-gray-200 hover:border-gray-300 bg-white'
+                }`}
+              >
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="currentColor">
+                    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-semibold text-gray-900">PSE</p>
+                  <p className="text-sm text-gray-500">Débito bancario</p>
+                </div>
+                {paymentMethod === 'pse' && (
                   <div className="w-6 h-6 bg-gray-900 rounded-full flex items-center justify-center animate-scale-in">
                     <Check className="w-4 h-4 text-white" />
                   </div>
