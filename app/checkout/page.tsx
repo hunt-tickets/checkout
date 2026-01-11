@@ -276,7 +276,7 @@ export default function CheckoutPage() {
                 isPaymentDropdownOpen ? 'border-gray-900' : 'border-gray-200'
               }`}
             >
-              {paymentMethod && paymentMethod !== 'card' ? (
+              {paymentMethod ? (
                 <div className="flex items-center gap-3">
                   {paymentMethod === 'apple-pay' && (
                     <>
@@ -323,6 +323,14 @@ export default function CheckoutPage() {
                         <Banknote className="w-4 h-4 text-white" />
                       </div>
                       <span className="font-medium">Efectivo</span>
+                    </>
+                  )}
+                  {paymentMethod === 'card' && (
+                    <>
+                      <div className="w-8 h-8 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center">
+                        <CreditCard className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="font-medium">Tarjeta</span>
                     </>
                   )}
                 </div>
@@ -418,6 +426,19 @@ export default function CheckoutPage() {
                         <Banknote className="w-6 h-6 text-white" />
                       </div>
                       <span className="text-sm font-medium text-gray-900">Efectivo</span>
+                    </button>
+
+                    {/* Tarjeta */}
+                    <button
+                      onClick={() => { setPaymentMethod('card'); setIsPaymentDropdownOpen(false); }}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                        paymentMethod === 'card' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center">
+                        <CreditCard className="w-6 h-6 text-white" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Tarjeta</span>
                     </button>
                   </div>
 
