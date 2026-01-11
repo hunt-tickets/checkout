@@ -32,6 +32,8 @@ const mockItems: OrderItem[] = [
 const TABLE_NUMBER = 12
 const RESTAURANT_NAME = 'La Brasserie'
 const ORDER_NUMBER = '0042'
+const COMPANY_NAME = 'La Brasserie Gourmet S.A.S.'
+const COMPANY_NIT = '901.234.567-8'
 const IMPOCONSUMO_RATE = 0.08
 const SERVICE_RATE = 0.10 // 10% propina voluntaria
 
@@ -575,6 +577,12 @@ export default function CheckoutPage() {
             </>
           )}
         </button>
+
+        {/* Company Info */}
+        <div className="text-center text-xs text-gray-400">
+          <p>{COMPANY_NAME}</p>
+          <p>NIT: {COMPANY_NIT}</p>
+        </div>
 
         {/* Safe Area */}
         <div className="h-4" />
