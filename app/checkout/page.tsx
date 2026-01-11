@@ -315,9 +315,12 @@ export default function CheckoutPage() {
                   : 'border-gray-200 hover:border-gray-300 bg-white'
               }`}
             >
-              <div className="w-10 h-10 bg-[#003B71] rounded-lg flex items-center justify-center overflow-hidden relative">
-                <span className="text-white font-bold text-sm tracking-tight">PSE</span>
-                <div className="absolute top-1 right-1 w-2 h-2 bg-[#FC7003] rounded-full"></div>
+              <div className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden p-1.5">
+                <img
+                  src="https://cdn.freebiesupply.com/logos/large/2x/pse-logo-png-transparent.png"
+                  alt="PSE"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xs font-medium text-gray-700">PSE</span>
             </button>
