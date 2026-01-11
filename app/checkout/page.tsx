@@ -162,16 +162,6 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Main Content */}
       <main className="max-w-lg mx-auto px-4 py-6 space-y-6">
-        {/* Title */}
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
-            Tu Cuenta
-          </h1>
-          <p className="text-gray-500 mt-1">
-            Mesa {TABLE_NUMBER}
-          </p>
-        </div>
-
         {/* Items List - Collapsible */}
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
           <button
