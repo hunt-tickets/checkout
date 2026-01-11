@@ -332,75 +332,99 @@ export default function CheckoutPage() {
               <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isPaymentDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
+            {/* Bottom Sheet Modal */}
             {isPaymentDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden">
-                {/* Apple Pay */}
-                <button
-                  onClick={() => { setPaymentMethod('apple-pay'); setIsPaymentDropdownOpen(false); }}
-                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors ${paymentMethod === 'apple-pay' ? 'bg-gray-50' : ''}`}
-                >
-                  <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="currentColor">
-                      <path d="M17.0425 12.3095C17.0425 11.0555 17.6785 9.9785 18.7265 9.3495C18.0685 8.4215 17.0645 7.9015 15.7415 7.8195C14.4185 7.7375 13.0155 8.6145 12.5365 8.6145C12.0575 8.6145 10.8335 7.8605 9.7955 7.8605C7.6225 7.9015 5.3065 9.3905 5.3065 12.5145C5.3065 13.4835 5.4945 14.4835 5.8695 15.5145C6.3755 16.9215 8.2015 20.1865 10.1095 20.1045C11.0655 20.0635 11.7385 19.4155 12.9955 19.4155C14.2525 19.4155 14.8705 20.1045 15.9335 20.1045C17.8605 20.0635 19.5025 17.1215 19.9815 15.7145C17.3685 14.4435 17.0425 12.3915 17.0425 12.3095ZM14.7545 6.4515C15.6085 5.4155 15.4995 4.4635 15.4645 4.0865C14.7075 4.1275 13.8395 4.6185 13.3375 5.2145C12.7915 5.8515 12.4575 6.6455 12.5315 7.5185C13.3495 7.5855 14.1045 7.1285 14.7545 6.4515Z"/>
-                    </svg>
-                  </div>
-                  <span className="font-medium text-gray-900">Apple Pay</span>
-                  {paymentMethod === 'apple-pay' && <Check className="w-5 h-5 text-gray-900 ml-auto" />}
-                </button>
+              <>
+                {/* Backdrop */}
+                <div
+                  className="fixed inset-0 bg-black/50 z-40"
+                  onClick={() => setIsPaymentDropdownOpen(false)}
+                />
+                {/* Modal */}
+                <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-50 p-6 animate-slide-up">
+                  {/* Handle */}
+                  <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6" />
 
-                {/* Google Pay */}
-                <button
-                  onClick={() => { setPaymentMethod('google-pay'); setIsPaymentDropdownOpen(false); }}
-                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors border-t border-gray-100 ${paymentMethod === 'google-pay' ? 'bg-gray-50' : ''}`}
-                >
-                  <div className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center">
-                    <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
-                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                    </svg>
-                  </div>
-                  <span className="font-medium text-gray-900">Google Pay</span>
-                  {paymentMethod === 'google-pay' && <Check className="w-5 h-5 text-gray-900 ml-auto" />}
-                </button>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Seleccionar método de pago</h3>
 
-                {/* PSE */}
-                <button
-                  onClick={() => { setPaymentMethod('pse'); setIsPaymentDropdownOpen(false); }}
-                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors border-t border-gray-100 ${paymentMethod === 'pse' ? 'bg-gray-50' : ''}`}
-                >
-                  <div className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="https://inmobiliarialamansion.com/wp-content/uploads/2019/01/logo-pse.png" alt="PSE" className="w-full h-full object-contain"/>
-                  </div>
-                  <span className="font-medium text-gray-900">PSE</span>
-                  {paymentMethod === 'pse' && <Check className="w-5 h-5 text-gray-900 ml-auto" />}
-                </button>
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Apple Pay */}
+                    <button
+                      onClick={() => { setPaymentMethod('apple-pay'); setIsPaymentDropdownOpen(false); }}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                        paymentMethod === 'apple-pay' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" className="w-7 h-7 text-white" fill="currentColor">
+                          <path d="M17.0425 12.3095C17.0425 11.0555 17.6785 9.9785 18.7265 9.3495C18.0685 8.4215 17.0645 7.9015 15.7415 7.8195C14.4185 7.7375 13.0155 8.6145 12.5365 8.6145C12.0575 8.6145 10.8335 7.8605 9.7955 7.8605C7.6225 7.9015 5.3065 9.3905 5.3065 12.5145C5.3065 13.4835 5.4945 14.4835 5.8695 15.5145C6.3755 16.9215 8.2015 20.1865 10.1095 20.1045C11.0655 20.0635 11.7385 19.4155 12.9955 19.4155C14.2525 19.4155 14.8705 20.1045 15.9335 20.1045C17.8605 20.0635 19.5025 17.1215 19.9815 15.7145C17.3685 14.4435 17.0425 12.3915 17.0425 12.3095ZM14.7545 6.4515C15.6085 5.4155 15.4995 4.4635 15.4645 4.0865C14.7075 4.1275 13.8395 4.6185 13.3375 5.2145C12.7915 5.8515 12.4575 6.6455 12.5315 7.5185C13.3495 7.5855 14.1045 7.1285 14.7545 6.4515Z"/>
+                        </svg>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Apple Pay</span>
+                    </button>
 
-                {/* Nequi */}
-                <button
-                  onClick={() => { setPaymentMethod('nequi'); setIsPaymentDropdownOpen(false); }}
-                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors border-t border-gray-100 ${paymentMethod === 'nequi' ? 'bg-gray-50' : ''}`}
-                >
-                  <div className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRa-IvFB9__83_pwt3CPWH-RBLZljCptyE0t_-Pr23JBS1Cw58l9Lpyl0&s=10" alt="Nequi" className="w-full h-full object-contain"/>
-                  </div>
-                  <span className="font-medium text-gray-900">Nequi</span>
-                  {paymentMethod === 'nequi' && <Check className="w-5 h-5 text-gray-900 ml-auto" />}
-                </button>
+                    {/* Google Pay */}
+                    <button
+                      onClick={() => { setPaymentMethod('google-pay'); setIsPaymentDropdownOpen(false); }}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                        paymentMethod === 'google-pay' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+                          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Google Pay</span>
+                    </button>
 
-                {/* Efectivo */}
-                <button
-                  onClick={() => { setPaymentMethod('cash'); setIsPaymentDropdownOpen(false); }}
-                  className={`w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors border-t border-gray-100 ${paymentMethod === 'cash' ? 'bg-gray-50' : ''}`}
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                    <Banknote className="w-5 h-5 text-white" />
+                    {/* PSE */}
+                    <button
+                      onClick={() => { setPaymentMethod('pse'); setIsPaymentDropdownOpen(false); }}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                        paymentMethod === 'pse' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                        <img src="https://inmobiliarialamansion.com/wp-content/uploads/2019/01/logo-pse.png" alt="PSE" className="w-full h-full object-contain"/>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">PSE</span>
+                    </button>
+
+                    {/* Nequi */}
+                    <button
+                      onClick={() => { setPaymentMethod('nequi'); setIsPaymentDropdownOpen(false); }}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                        paymentMethod === 'nequi' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRa-IvFB9__83_pwt3CPWH-RBLZljCptyE0t_-Pr23JBS1Cw58l9Lpyl0&s=10" alt="Nequi" className="w-full h-full object-contain"/>
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Nequi</span>
+                    </button>
+
+                    {/* Efectivo */}
+                    <button
+                      onClick={() => { setPaymentMethod('cash'); setIsPaymentDropdownOpen(false); }}
+                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                        paymentMethod === 'cash' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                        <Banknote className="w-6 h-6 text-white" />
+                      </div>
+                      <span className="text-sm font-medium text-gray-900">Efectivo</span>
+                    </button>
                   </div>
-                  <span className="font-medium text-gray-900">Efectivo</span>
-                  {paymentMethod === 'cash' && <Check className="w-5 h-5 text-gray-900 ml-auto" />}
-                </button>
-              </div>
+
+                  {/* Safe area for bottom */}
+                  <div className="h-6" />
+                </div>
+              </>
             )}
           </div>
 
