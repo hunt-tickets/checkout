@@ -89,7 +89,7 @@ export default function CheckoutPage() {
   // Success Screen
   if (isPaid) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-x-hidden">
         <div className="max-w-lg mx-auto px-4 py-12">
           <div className="animate-fade-in text-center space-y-8">
             {/* Success Icon */}
@@ -162,7 +162,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-x-hidden">
       {/* Main Content */}
       <main className="max-w-lg mx-auto px-4 py-6 space-y-6">
         {/* Header */}
