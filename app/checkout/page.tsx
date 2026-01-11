@@ -317,7 +317,7 @@ export default function CheckoutPage() {
             >
               <div className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden p-1.5">
                 <img
-                  src="https://cdn.freebiesupply.com/logos/large/2x/pse-logo-png-transparent.png"
+                  src="https://inmobiliarialamansion.com/wp-content/uploads/2019/01/logo-pse.png"
                   alt="PSE"
                   className="w-full h-full object-contain"
                 />
