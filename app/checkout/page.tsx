@@ -40,6 +40,12 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [isPaid, setIsPaid] = useState(false)
 
+  // Card details
+  const [cardNumber, setCardNumber] = useState('')
+  const [cardExpiry, setCardExpiry] = useState('')
+  const [cardCvv, setCardCvv] = useState('')
+  const [cardName, setCardName] = useState('')
+
   // Calculations
   const subtotal = useMemo(() =>
     mockItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
@@ -252,10 +258,10 @@ export default function CheckoutPage() {
         </div>
 
         {/* Payment Methods */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <p className="text-sm font-medium text-gray-700">Método de pago</p>
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {/* Apple Pay */}
             <button
               onClick={() => setPaymentMethod('apple-pay')}
@@ -293,21 +299,6 @@ export default function CheckoutPage() {
               <span className="text-xs font-medium text-gray-700">Google Pay</span>
             </button>
 
-            {/* Tarjeta */}
-            <button
-              onClick={() => setPaymentMethod('card')}
-              className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                paymentMethod === 'card'
-                  ? 'border-gray-900 bg-gray-50'
-                  : 'border-gray-200 hover:border-gray-300 bg-white'
-              }`}
-            >
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <CreditCard className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xs font-medium text-gray-700">Tarjeta</span>
-            </button>
-
             {/* PSE */}
             <button
               onClick={() => setPaymentMethod('pse')}
@@ -327,7 +318,7 @@ export default function CheckoutPage() {
             {/* Efectivo */}
             <button
               onClick={() => setPaymentMethod('cash')}
-              className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 col-span-2 ${
+              className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
                 paymentMethod === 'cash'
                   ? 'border-gray-900 bg-gray-50'
                   : 'border-gray-200 hover:border-gray-300 bg-white'
@@ -338,6 +329,75 @@ export default function CheckoutPage() {
               </div>
               <span className="text-xs font-medium text-gray-700">Efectivo</span>
             </button>
+          </div>
+
+          {/* Separator */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-sm text-gray-400">o pagar con tarjeta</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
+
+          {/* Card Form */}
+          <div
+            onClick={() => setPaymentMethod('card')}
+            className={`bg-white rounded-2xl p-4 space-y-3 border-2 transition-all cursor-pointer ${
+              paymentMethod === 'card' ? 'border-gray-900' : 'border-gray-200'
+            }`}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <CreditCard className="w-5 h-5 text-gray-400" />
+              <span className="text-sm font-medium text-gray-700">Datos de tarjeta</span>
+            </div>
+
+            <input
+              type="text"
+              placeholder="Número de tarjeta"
+              value={cardNumber}
+              onChange={(e) => {
+                setPaymentMethod('card')
+                const value = e.target.value.replace(/\D/g, '').slice(0, 16)
+                const formatted = value.replace(/(\d{4})/g, '$1 ').trim()
+                setCardNumber(formatted)
+              }}
+              className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+            />
+
+            <div className="grid grid-cols-2 gap-3">
+              <input
+                type="text"
+                placeholder="MM/AA"
+                value={cardExpiry}
+                onChange={(e) => {
+                  setPaymentMethod('card')
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 4)
+                  const formatted = value.length > 2 ? `${value.slice(0, 2)}/${value.slice(2)}` : value
+                  setCardExpiry(formatted)
+                }}
+                className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+              />
+              <input
+                type="text"
+                placeholder="CVV"
+                value={cardCvv}
+                onChange={(e) => {
+                  setPaymentMethod('card')
+                  setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))
+                }}
+                className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+              />
+            </div>
+
+            <input
+              type="text"
+              placeholder="Nombre en la tarjeta"
+              value={cardName}
+              onChange={(e) => {
+                setPaymentMethod('card')
+                setCardName(e.target.value)
+              }}
+              className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+            />
           </div>
         </div>
 
