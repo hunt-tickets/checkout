@@ -215,50 +215,38 @@ export default function CheckoutPage() {
             <span className="tabular-nums">{formatCurrency(hipoconsumo)}</span>
           </div>
 
-          <div className="border-t border-gray-200 pt-3 space-y-3">
-            {/* Sin servicio */}
-            <div
-              onClick={() => setIncludeService(false)}
-              className={`flex justify-between items-center p-3 rounded-xl cursor-pointer transition-all ${
-                !includeService
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-white border border-gray-200 text-gray-900 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                  !includeService ? 'border-white' : 'border-gray-300'
-                }`}>
-                  {!includeService && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
-                </div>
-                <span className="font-medium">Sin servicio</span>
+          <div className="border-t border-gray-200 pt-3">
+            {/* Toggle servicio */}
+            <div className="flex justify-between items-center">
+              <div>
+                <span className="font-medium text-gray-900">Incluir servicio</span>
+                <span className="text-sm text-gray-500 ml-2">(10% voluntario)</span>
               </div>
-              <span className="font-semibold tabular-nums">{formatCurrency(totalSinServicio)}</span>
+              <button
+                onClick={() => setIncludeService(!includeService)}
+                className={`relative w-12 h-7 rounded-full transition-colors ${
+                  includeService ? 'bg-gray-900' : 'bg-gray-300'
+                }`}
+              >
+                <div
+                  className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform ${
+                    includeService ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
             </div>
 
-            {/* Con servicio */}
-            <div
-              onClick={() => setIncludeService(true)}
-              className={`flex justify-between items-center p-3 rounded-xl cursor-pointer transition-all ${
-                includeService
-                  ? 'bg-gray-900 text-white'
-                  : 'bg-white border border-gray-200 text-gray-900 hover:border-gray-300'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                  includeService ? 'border-white' : 'border-gray-300'
-                }`}>
-                  {includeService && <div className="w-2.5 h-2.5 bg-white rounded-full" />}
-                </div>
-                <div>
-                  <span className="font-medium">Con servicio</span>
-                  <span className={`text-sm ml-2 ${includeService ? 'text-gray-300' : 'text-gray-500'}`}>
-                    (10% voluntario)
-                  </span>
-                </div>
+            {includeService && (
+              <div className="flex justify-between text-gray-500 mt-2">
+                <span>Servicio</span>
+                <span className="tabular-nums">+{formatCurrency(servicio)}</span>
               </div>
-              <span className="font-semibold tabular-nums">{formatCurrency(totalConServicio)}</span>
+            )}
+
+            {/* Total */}
+            <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
+              <span className="font-semibold text-gray-900 text-lg">Total</span>
+              <span className="font-bold text-xl tabular-nums">{formatCurrency(totalFinal)}</span>
             </div>
           </div>
         </div>
