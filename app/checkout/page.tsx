@@ -162,6 +162,17 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Main Content */}
       <main className="max-w-lg mx-auto px-4 py-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold text-gray-900">{RESTAURANT_NAME}</h1>
+            <p className="text-sm text-gray-500">Mesa {TABLE_NUMBER}</p>
+          </div>
+          <div className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
+            <span className="text-white font-bold text-sm">{TABLE_NUMBER}</span>
+          </div>
+        </div>
+
         {/* Items List - Collapsible */}
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
           <button
