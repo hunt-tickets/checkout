@@ -30,22 +30,14 @@ body {
   background: var(--background);
 }
 
-/* Custom scrollbar */
+/* Hide scrollbar */
 ::-webkit-scrollbar {
-  width: 4px;
+  display: none;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 2px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Smooth transitions for interactive elements */
