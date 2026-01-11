@@ -106,7 +106,7 @@ export default function LandingPage() {
 
             {/* Subheadline */}
             <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-              Escanea, paga y listo. Sin esperas, sin fricción. Aumenta la rotación de mesas
+              Toca, paga y listo. Sin esperas, sin fricción. Aumenta la rotación de mesas
               y mejora la experiencia de tus clientes.
             </p>
 
@@ -251,7 +251,7 @@ export default function LandingPage() {
               {
                 icon: <Zap className="w-6 h-6" />,
                 title: 'Pagos instantáneos',
-                description: 'Tus clientes pagan en segundos con QR. Sin esperar al mesero, sin filas.',
+                description: 'Tus clientes pagan en segundos con NFC. Solo tocan y listo.',
               },
               {
                 icon: <Shield className="w-6 h-6" />,
@@ -307,8 +307,8 @@ export default function LandingPage() {
             {[
               {
                 step: '01',
-                title: 'Escanea el QR',
-                description: 'El cliente escanea el código QR en la mesa con su celular',
+                title: 'Toca el NFC',
+                description: 'El cliente acerca su celular al tag NFC en la mesa',
               },
               {
                 step: '02',
@@ -462,7 +462,7 @@ export default function LandingPage() {
                 {[
                   'Sin costo de instalación',
                   'Sin mensualidades',
-                  'QR codes ilimitados',
+                  'Tags NFC ilimitados',
                   'Dashboard en tiempo real',
                   'Soporte 24/7',
                   'Todos los métodos de pago',
