@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 // Types
-type PaymentMethod = 'apple-pay' | 'google-pay' | 'card' | 'pse' | 'cash'
+type PaymentMethod = 'apple-pay' | 'google-pay' | 'card' | 'pse' | 'nequi' | 'cash'
 
 interface OrderItem {
   id: string
@@ -323,6 +323,25 @@ export default function CheckoutPage() {
                 />
               </div>
               <span className="text-xs font-medium text-gray-700">PSE</span>
+            </button>
+
+            {/* Nequi */}
+            <button
+              onClick={() => setPaymentMethod('nequi')}
+              className={`p-3 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
+                paymentMethod === 'nequi'
+                  ? 'border-gray-900 bg-gray-50'
+                  : 'border-gray-200 hover:border-gray-300 bg-white'
+              }`}
+            >
+              <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                <img
+                  src="https://logosenvector.com/logo/img/nequi-37254.png"
+                  alt="Nequi"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <span className="text-xs font-medium text-gray-700">Nequi</span>
             </button>
 
             {/* Efectivo */}
