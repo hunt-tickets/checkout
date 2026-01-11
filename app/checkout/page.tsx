@@ -448,74 +448,58 @@ export default function CheckoutPage() {
             )}
           </div>
 
-          {/* Separator */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-sm text-gray-400">o pagar con tarjeta</span>
-            <div className="flex-1 h-px bg-gray-200" />
-          </div>
+          {/* Card Form - Only shown when card is selected */}
+          {paymentMethod === 'card' && (
+            <div className="bg-white rounded-2xl p-4 space-y-3 border-2 border-gray-900">
+              <div className="flex items-center gap-2 mb-3">
+                <CreditCard className="w-5 h-5 text-gray-400" />
+                <span className="text-sm font-medium text-gray-700">Datos de tarjeta</span>
+              </div>
 
-          {/* Card Form */}
-          <div
-            onClick={() => setPaymentMethod('card')}
-            className={`bg-white rounded-2xl p-4 space-y-3 border-2 transition-all cursor-pointer ${
-              paymentMethod === 'card' ? 'border-gray-900' : 'border-gray-200'
-            }`}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <CreditCard className="w-5 h-5 text-gray-400" />
-              <span className="text-sm font-medium text-gray-700">Datos de tarjeta</span>
-            </div>
-
-            <input
-              type="text"
-              placeholder="Número de tarjeta"
-              value={cardNumber}
-              onChange={(e) => {
-                setPaymentMethod('card')
-                const value = e.target.value.replace(/\D/g, '').slice(0, 16)
-                const formatted = value.replace(/(\d{4})/g, '$1 ').trim()
-                setCardNumber(formatted)
-              }}
-              className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
-            />
-
-            <div className="grid grid-cols-2 gap-3">
               <input
                 type="text"
-                placeholder="MM/AA"
-                value={cardExpiry}
+                placeholder="Número de tarjeta"
+                value={cardNumber}
                 onChange={(e) => {
-                  setPaymentMethod('card')
-                  const value = e.target.value.replace(/\D/g, '').slice(0, 4)
-                  const formatted = value.length > 2 ? `${value.slice(0, 2)}/${value.slice(2)}` : value
-                  setCardExpiry(formatted)
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 16)
+                  const formatted = value.replace(/(\d{4})/g, '$1 ').trim()
+                  setCardNumber(formatted)
                 }}
                 className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
               />
+
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  placeholder="MM/AA"
+                  value={cardExpiry}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 4)
+                    const formatted = value.length > 2 ? `${value.slice(0, 2)}/${value.slice(2)}` : value
+                    setCardExpiry(formatted)
+                  }}
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+                />
+                <input
+                  type="text"
+                  placeholder="CVV"
+                  value={cardCvv}
+                  onChange={(e) => {
+                    setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))
+                  }}
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+                />
+              </div>
+
               <input
                 type="text"
-                placeholder="CVV"
-                value={cardCvv}
-                onChange={(e) => {
-                  setPaymentMethod('card')
-                  setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))
-                }}
+                placeholder="Nombre en la tarjeta"
+                value={cardName}
+                onChange={(e) => setCardName(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
               />
             </div>
-
-            <input
-              type="text"
-              placeholder="Nombre en la tarjeta"
-              value={cardName}
-              onChange={(e) => {
-                setPaymentMethod('card')
-                setCardName(e.target.value)
-              }}
-              className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
-            />
-          </div>
+          )}
         </div>
 
         {/* Invoice */}
