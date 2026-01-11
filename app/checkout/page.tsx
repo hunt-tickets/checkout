@@ -6,8 +6,7 @@ import {
   CreditCard,
   Sparkles,
   ChevronRight,
-  ChevronDown,
-  Banknote
+  ChevronDown
 } from 'lucide-react'
 
 // Types
@@ -320,15 +319,15 @@ export default function CheckoutPage() {
                   {paymentMethod === 'cash' && (
                     <>
                       <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                        <Banknote className="w-4 h-4 text-white" />
+                        <span className="text-white font-bold text-xs">COP</span>
                       </div>
                       <span className="font-medium">Efectivo</span>
                     </>
                   )}
                   {paymentMethod === 'card' && (
                     <>
-                      <div className="w-8 h-8 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center">
-                        <CreditCard className="w-4 h-4 text-white" />
+                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-bold text-lg">💳</span>
                       </div>
                       <span className="font-medium">Tarjeta</span>
                     </>
@@ -423,7 +422,7 @@ export default function CheckoutPage() {
                       }`}
                     >
                       <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-                        <Banknote className="w-6 h-6 text-white" />
+                        <span className="text-white font-bold text-sm">COP</span>
                       </div>
                       <span className="text-sm font-medium text-gray-900">Efectivo</span>
                     </button>
@@ -435,8 +434,8 @@ export default function CheckoutPage() {
                         paymentMethod === 'card' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center">
-                        <CreditCard className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                        <span className="text-white text-2xl">💳</span>
                       </div>
                       <span className="text-sm font-medium text-gray-900">Tarjeta</span>
                     </button>
