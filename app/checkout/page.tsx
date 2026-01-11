@@ -329,7 +329,7 @@ export default function CheckoutPage() {
                   )}
                   {paymentMethod === 'card' && (
                     <>
-                      <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center">
                         <span className="text-white font-bold text-lg">💳</span>
                       </div>
                       <span className="font-medium">Tarjeta</span>
@@ -437,7 +437,7 @@ export default function CheckoutPage() {
                         paymentMethod === 'card' ? 'border-gray-900 bg-gray-50' : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-br from-gray-700 to-gray-900 rounded-lg flex items-center justify-center">
                         <span className="text-white text-2xl">💳</span>
                       </div>
                       <span className="text-sm font-medium text-gray-900">Tarjeta</span>
