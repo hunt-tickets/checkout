@@ -31,7 +31,7 @@ const mockItems: OrderItem[] = [
 
 const TABLE_NUMBER = 12
 const RESTAURANT_NAME = 'La Brasserie'
-const HIPOCONSUMO_RATE = 0.10
+const IMPOCONSUMO_RATE = 0.08
 const SERVICE_RATE = 0.10 // 10% propina voluntaria
 
 export default function CheckoutPage() {
@@ -60,8 +60,8 @@ export default function CheckoutPage() {
     []
   )
 
-  const hipoconsumo = useMemo(() => subtotal * HIPOCONSUMO_RATE, [subtotal])
-  const totalSinServicio = useMemo(() => subtotal + hipoconsumo, [subtotal, hipoconsumo])
+  const impoconsumo = useMemo(() => subtotal * IMPOCONSUMO_RATE, [subtotal])
+  const totalSinServicio = useMemo(() => subtotal + impoconsumo, [subtotal, impoconsumo])
   const servicio = useMemo(() => subtotal * SERVICE_RATE, [subtotal])
   const totalConServicio = useMemo(() => totalSinServicio + servicio, [totalSinServicio, servicio])
   const totalFinal = useMemo(() => includeService ? totalConServicio : totalSinServicio, [includeService, totalConServicio, totalSinServicio])
@@ -120,8 +120,8 @@ export default function CheckoutPage() {
                   <span className="text-gray-900">{formatCurrency(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Hipoconsumo</span>
-                  <span className="text-gray-900">{formatCurrency(hipoconsumo)}</span>
+                  <span className="text-gray-500">Impoconsumo</span>
+                  <span className="text-gray-900">{formatCurrency(impoconsumo)}</span>
                 </div>
                 {includeService && (
                   <div className="flex justify-between">
@@ -224,8 +224,8 @@ export default function CheckoutPage() {
             <span className="tabular-nums">{formatCurrency(subtotal)}</span>
           </div>
           <div className="flex justify-between text-gray-600">
-            <span>Hipoconsumo ({(HIPOCONSUMO_RATE * 100).toFixed(0)}%)</span>
-            <span className="tabular-nums">{formatCurrency(hipoconsumo)}</span>
+            <span>Impoconsumo ({(IMPOCONSUMO_RATE * 100).toFixed(0)}%)</span>
+            <span className="tabular-nums">{formatCurrency(impoconsumo)}</span>
           </div>
 
           <div className="border-t border-gray-200 pt-3">
