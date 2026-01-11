@@ -31,6 +31,7 @@ const mockItems: OrderItem[] = [
 
 const TABLE_NUMBER = 12
 const RESTAURANT_NAME = 'La Brasserie'
+const ORDER_NUMBER = '0042'
 const IMPOCONSUMO_RATE = 0.08
 const SERVICE_RATE = 0.10 // 10% propina voluntaria
 
@@ -166,7 +167,7 @@ export default function CheckoutPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-semibold text-gray-900">{RESTAURANT_NAME}</h1>
-            <p className="text-sm text-gray-500">Mesa {TABLE_NUMBER}</p>
+            <p className="text-sm text-gray-500">Mesa {TABLE_NUMBER} · Orden #{ORDER_NUMBER}</p>
           </div>
           <div className="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center">
             <span className="text-white font-bold text-sm">{TABLE_NUMBER}</span>
