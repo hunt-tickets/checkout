@@ -6,7 +6,8 @@ import {
   CreditCard,
   Banknote,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  ChevronDown
 } from 'lucide-react'
 
 // Types
@@ -39,6 +40,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [isPaid, setIsPaid] = useState(false)
+  const [isItemsExpanded, setIsItemsExpanded] = useState(false)
 
   // Card details
   const [cardNumber, setCardNumber] = useState('')
@@ -164,31 +166,48 @@ export default function CheckoutPage() {
           </p>
         </div>
 
-        {/* Items List */}
+        {/* Items List - Collapsible */}
         <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-          <div className="max-h-[240px] overflow-y-auto">
-            {mockItems.map((item, index) => (
-              <div
-                key={item.id}
-                className={`flex items-start justify-between p-4 ${
-                  index !== mockItems.length - 1 ? 'border-b border-gray-100' : ''
-                }`}
-              >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-400 w-5">{item.quantity}×</span>
-                    <span className="font-medium text-gray-900">{item.name}</span>
+          <button
+            onClick={() => setIsItemsExpanded(!isItemsExpanded)}
+            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-medium text-gray-900">Resumen del pedido</span>
+              <span className="text-sm text-gray-500">({mockItems.length} items)</span>
+            </div>
+            <ChevronDown
+              className={`w-5 h-5 text-gray-400 transition-transform ${
+                isItemsExpanded ? 'rotate-180' : ''
+              }`}
+            />
+          </button>
+
+          {isItemsExpanded && (
+            <div className="border-t border-gray-100 max-h-[240px] overflow-y-auto">
+              {mockItems.map((item, index) => (
+                <div
+                  key={item.id}
+                  className={`flex items-start justify-between p-4 ${
+                    index !== mockItems.length - 1 ? 'border-b border-gray-100' : ''
+                  }`}
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-400 w-5">{item.quantity}×</span>
+                      <span className="font-medium text-gray-900">{item.name}</span>
+                    </div>
+                    {item.notes && (
+                      <p className="text-sm text-gray-500 ml-7 mt-0.5">{item.notes}</p>
+                    )}
                   </div>
-                  {item.notes && (
-                    <p className="text-sm text-gray-500 ml-7 mt-0.5">{item.notes}</p>
-                  )}
+                  <span className="font-medium tabular-nums text-gray-900">
+                    {formatCurrency(item.price * item.quantity)}
+                  </span>
                 </div>
-                <span className="font-medium tabular-nums text-gray-900">
-                  {formatCurrency(item.price * item.quantity)}
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Totals */}
