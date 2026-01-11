@@ -336,7 +336,7 @@ export default function CheckoutPage() {
             >
               <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                 <img
-                  src="https://logosenvector.com/logo/img/nequi-37254.png"
+                  src="https://images.prismic.io/ria-public-site/Zrp70UaF0TcGI3-Q_LogoNequi-2-1.png?auto=format,compress"
                   alt="Nequi"
                   className="w-full h-full object-contain"
                 />
