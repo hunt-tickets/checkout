@@ -315,7 +315,7 @@ export default function CheckoutPage() {
                   : 'border-gray-200 hover:border-gray-300 bg-white'
               }`}
             >
-              <div className="w-10 h-10 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden p-1.5">
+              <div className="w-12 h-12 bg-white border border-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                 <img
                   src="https://inmobiliarialamansion.com/wp-content/uploads/2019/01/logo-pse.png"
                   alt="PSE"
