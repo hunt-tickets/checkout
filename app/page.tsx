@@ -424,7 +424,7 @@ export default function LandingPage() {
                     <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-gray-600 mb-6">"{testimonial.quote}"</p>
+                <p className="text-gray-600 mb-6">&ldquo;{testimonial.quote}&rdquo;</p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full" />
                   <div>
