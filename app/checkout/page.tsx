@@ -424,9 +424,10 @@ export default function CheckoutPage() {
                     : 'border-gray-200 hover:border-gray-300 bg-white'
                 }`}
               >
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="currentColor">
-                    <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+                <div className="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center overflow-hidden">
+                  <svg viewBox="0 0 256 256" className="w-10 h-10">
+                    <rect fill="#1A1446" width="256" height="256" rx="20"/>
+                    <text x="128" y="155" textAnchor="middle" fill="#F7941D" fontFamily="Arial Black, sans-serif" fontSize="90" fontWeight="bold">PSE</text>
                   </svg>
                 </div>
                 <div className="flex-1 text-left">
