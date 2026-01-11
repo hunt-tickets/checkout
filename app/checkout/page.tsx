@@ -48,6 +48,12 @@ export default function CheckoutPage() {
   const [cardCvv, setCardCvv] = useState('')
   const [cardName, setCardName] = useState('')
 
+  // Invoice
+  const [wantsInvoice, setWantsInvoice] = useState(false)
+  const [invoiceNit, setInvoiceNit] = useState('')
+  const [invoiceName, setInvoiceName] = useState('')
+  const [invoiceEmail, setInvoiceEmail] = useState('')
+
   // Calculations
   const subtotal = useMemo(() =>
     mockItems.reduce((sum, item) => sum + (item.price * item.quantity), 0),
@@ -399,6 +405,56 @@ export default function CheckoutPage() {
               className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
             />
           </div>
+        </div>
+
+        {/* Invoice */}
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div
+            onClick={() => setWantsInvoice(!wantsInvoice)}
+            className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+          >
+            <div>
+              <span className="font-medium text-gray-900">Factura electrónica</span>
+              <p className="text-sm text-gray-500">Solicitar factura con datos fiscales</p>
+            </div>
+            <button
+              className={`relative w-12 h-7 rounded-full transition-colors ${
+                wantsInvoice ? 'bg-gray-900' : 'bg-gray-300'
+              }`}
+            >
+              <div
+                className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow-md transition-transform ${
+                  wantsInvoice ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+
+          {wantsInvoice && (
+            <div className="border-t border-gray-100 p-4 space-y-3">
+              <input
+                type="text"
+                placeholder="NIT o Cédula"
+                value={invoiceNit}
+                onChange={(e) => setInvoiceNit(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+              />
+              <input
+                type="text"
+                placeholder="Razón social o nombre"
+                value={invoiceName}
+                onChange={(e) => setInvoiceName(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+              />
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                value={invoiceEmail}
+                onChange={(e) => setInvoiceEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-gray-50 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all"
+              />
+            </div>
+          )}
         </div>
 
         {/* Pay Button */}
