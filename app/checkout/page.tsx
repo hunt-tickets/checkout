@@ -205,7 +205,7 @@ export default function CheckoutPage() {
         </div>
 
         {/* Totals */}
-        <div className="bg-gray-50 rounded-2xl p-4 space-y-3">
+        <div className="bg-gray-50 rounded-2xl p-4 space-y-3 border border-gray-900">
           <div className="flex justify-between text-gray-600">
             <span>Subtotal</span>
             <span className="tabular-nums">{formatCurrency(subtotal)}</span>
