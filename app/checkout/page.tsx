@@ -242,7 +242,7 @@ export default function CheckoutPage() {
         <div className="space-y-4">
           <p className="text-sm font-medium text-gray-700">Método de pago</p>
 
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {/* Apple Pay */}
             <button
               onClick={() => setPaymentMethod('apple-pay')}
